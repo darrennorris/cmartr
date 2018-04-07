@@ -1,0 +1,14 @@
+Package: cmartr
+Type: Package
+Title: Functions for processing and analysing river turtle management
+Version: 0.1.0
+Author: Darren Norris [cre, aut]
+Maintainer: Darren Norris <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+Imports:
+    sf
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
