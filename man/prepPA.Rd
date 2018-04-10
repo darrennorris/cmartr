@@ -7,10 +7,20 @@
 prepPA(PAin = NA)
 }
 \arguments{
-\item{PAin}{File with protected area polygons}
+\item{PAin}{Input file with protected area polygons}
 }
 \value{
+Files for subsequent use.
+}
+\description{
 Generates files for subsequent use.
+}
+\details{
+Takes georeferenced polygons of protected areas from the World Database on Protected Areas (WDPA, downloaded from https://protectedplanet.net/ on 6 December 2017).
+Includes subset of terrestrial South American protected areas that are in the raster grid.
+I.e. touching, intersecting, within bounding box created from 150 km  buffer around the catchments. 
+ Cleans and identifies 3 classes: Indigenous lands, Strict Protection and Use.
+ Definitions from https://www.iucn.org/theme/protected-areas/about/protected-area-categories .
 }
 \examples{
 \dontrun{

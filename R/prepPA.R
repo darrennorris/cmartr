@@ -1,9 +1,15 @@
 
 #' @title Prepare protected area polygons
+#' @description Generates files for subsequent use.
 #'
-#' @param PAin File with protected area polygons
+#' @param PAin Input file with protected area polygons
 #'
-#' @return Generates files for subsequent use.
+#' @return Files for subsequent use.
+#' @details Takes georeferenced polygons of protected areas from the World Database on Protected Areas (WDPA, downloaded from https://protectedplanet.net/ on 6 December 2017).
+#' Includes subset of terrestrial South American protected areas that are in the raster grid.
+#' I.e. touching, intersecting, within bounding box created from 150 km  buffer around the catchments. 
+#'  Cleans and identifies 3 classes: Indigenous lands, Strict Protection and Use.
+#'  Definitions from https://www.iucn.org/theme/protected-areas/about/protected-area-categories .
 #' @export
 #'
 #' @examples
@@ -12,9 +18,6 @@
 prepPA <- function(PAin = NA){
 ### protected areas
 # PAs (wgs84)
-# 3 classes ; Indigenous lands, Strict Protection and Use
-# https://www.iucn.org/theme/protected-areas/about/protected-area-categories
- 
 sf.pa <- sf::read_sf(PAin)
 sf.pa$paclass <- sf.pa$OBJECTID
 sf.pa$paclass <- NA
@@ -27,9 +30,6 @@ selSP <- which(sf.pa$IUCN_CAT %in% getSP)
 sf.pa[selSP, 'paclass' ] <- 2
 selNA <- which(is.na(sf.pa$paclass) == TRUE)
 sf.pa[selNA, 'paclass' ] <- 1
-# sf1clean2 from demog_river.R
-sfi <- sf::st_intersection(sf.pa, sf1clean2)
-#library(raster)
-#spPA <-  raster::crop(as(sf.pa, "SpatialPolygons"), 
-#                      as(sf1clean2, "SpatialPolygons"))
+return(sf.pa)
+
 }
