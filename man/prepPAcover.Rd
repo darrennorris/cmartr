@@ -21,7 +21,7 @@ Generates files for subsequent use.
 }
 \details{
 To remove overlapping areas with different PA classifications.
-These are big areas and processing takes time: 3 - 4 hours on a laptop.
+These are big areas and processing takes time: 4 - 5 hours on a laptop.
 }
 \examples{
 \dontrun{

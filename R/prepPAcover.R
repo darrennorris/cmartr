@@ -15,7 +15,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' # load shapefiles needed
+#' # Load shapefiles needed
+#' # These large files are not available via github package. 
+#' # Download "shapes.zip" from :
+#' # https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
 #' Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
 #' PA <- system.file("shape/wdpaselect.shp", package="cmartr")
 #' B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
