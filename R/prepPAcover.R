@@ -29,8 +29,6 @@
 #' Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
 #' PA <- system.file("shape/wdpaselect.shp", package="cmartr")
 #' B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
-#' #add id for dissolved basin polygon
-#' sfclean$sbid <- "P.unifilis"
 #' pacover <- prepPAcover(pPA = PA, pBasin = B, pBasinSp = Bsp)
 #' }
 prepPAcover <- function(pPA = NA, pBasin = NA, pBasinSp = NA, make_shape = FALSE){

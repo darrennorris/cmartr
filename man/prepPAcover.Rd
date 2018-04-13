@@ -4,20 +4,26 @@
 \alias{prepPAcover}
 \title{Prepare polygons for PAcover calculations}
 \usage{
-prepPAcover(pPA = NA, pBasin = NA, pBasinSp = NA)
+prepPAcover(pPA = NA, pBasin = NA, pBasinSp = NA, make_shape = FALSE)
 }
 \arguments{
 \item{pPA}{Input file with protected area polygons.}
 
 \item{pBasin}{Input file with basin polygons.}
 
-\item{pBasinSp}{Input file with polygon covering basins in species range of occurance.}
+\item{pBasinSp}{Input file with polygon covering basins 
+in species range of occurance.}
+
+\item{make_shape}{Logical (TRUE/FALSE). Generate polygon shapefile of
+protected areas in 3 classes across basins in species range.}
 }
 \value{
-Polygons of area covered by protected areas.
+Polygons of area covered by protected areas. Optionally exports
+polygon as shapefile "pacover.shp".
 }
 \description{
-Generates files for subsequent use.
+Generates files for subsequent use. Optionally exports
+polygon as shapefile "pacover.shp".
 }
 \details{
 To remove overlapping areas with different PA classifications.
@@ -25,12 +31,15 @@ These are big areas and processing takes time: 4 - 5 hours on a laptop.
 }
 \examples{
 \dontrun{
-# load shapefiles needed
+# Load shapefiles needed
+# These large files are not available via github package. 
+# Download "shapes.zip" from :
+# https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
+# For the code below to work, 
+# extract files in "shapes.zip" to cmartr/inst/shape .
 Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
 PA <- system.file("shape/wdpaselect.shp", package="cmartr")
 B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
-#add id for dissolved basin polygon
-sfclean$sbid <- "P.unifilis"
 pacover <- prepPAcover(pPA = PA, pBasin = B, pBasinSp = Bsp)
 }
 }

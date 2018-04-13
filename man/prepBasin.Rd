@@ -4,16 +4,20 @@
 \alias{prepBasin}
 \title{Prepare basin polygons}
 \usage{
-prepBasin(Bain = NA)
+prepBasin(Bain = NA, make_shape = FALSE)
 }
 \arguments{
 \item{Bain}{Input file with basin polygons}
+
+\item{make_shape}{Logical (TRUE/FALSE). Generate polygon shapefile 
+covering basins with species locations ("SpeciesBasin.shp").}
 }
 \value{
 Files for subsequent use.
 }
 \description{
-Generates files for subsequent use.
+Generates files for subsequent use. 
+Optionally creates "SpeciesBasin.shp" .
 }
 \details{
 Takes georeferenced polygons of river basins
