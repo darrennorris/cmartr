@@ -10,7 +10,8 @@ Imports:
     sf,
     dplyr,
     magrittr,
-    units
+    units,
+    rnaturalearth
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

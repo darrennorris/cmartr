@@ -37,12 +37,12 @@ sf.pacover3395 <- sf::st_transform(sf.pacover[, c('paclass', 'geometry')], crs=3
 sfclean3395 <- sf::st_transform(sfclean, crs=3395)
 
 # get country borders
-nec <- rnaturalearth::ne_countries(scale = 110, type = "countries", 
-                                   continent = "South America", returnclass = "sf")
-nec <- st_transform(nec, crs=3395)
+nec <- rnaturalearth::ne_countries(continent = "South America", 
+                               type = 'map_units', returnclass = "sf")
+nec3395 <- sf::st_transform(nec, crs=3395)
 
 # few minutes
-pacovc <- st_intersection(sfclean3395, nec)
+pacovc <- st_intersection(sfclean3395, nec3395)
 pacovc2 <- st_intersection(pacovc, sf.pacover3395) 
 # need to make valid
 pacovc2clean <- sf::st_union(sf::st_buffer(pacovc2,0), by_feature = TRUE) %>% 
