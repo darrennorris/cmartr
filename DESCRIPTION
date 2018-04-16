@@ -7,11 +7,12 @@ Maintainer: Darren Norris <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 Imports:
-    sf,
     dplyr,
+    lwgeom,
     magrittr,
     units,
-    rnaturalearth
+    rnaturalearth,
+    sf
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

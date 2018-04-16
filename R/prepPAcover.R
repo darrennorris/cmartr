@@ -35,7 +35,7 @@ prepPAcover <- function(pPA = NA, pBasin = NA, pBasinSp = NA, make_shape = FALSE
   # big spatial processing needs memory
   memory.limit(84000)
   # clean and prep shapefiles
-  sf.speciesBasin <- pBasinSp
+  sf.speciesBasin <- sf::st_read(pBasinSp)
   sf.pa <- cmartr::prepPA(PAin = pPA)
   sfclean <- cmartr::prepBasin(Bain = pBasin)
   #add id for dissolved basin polygon

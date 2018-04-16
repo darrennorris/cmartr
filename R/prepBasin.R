@@ -43,7 +43,7 @@ prepBasin <- function(Bain = NA, make_shape = FALSE){
   sf.speciesBasin <- sf::st_union(sf::st_buffer(sf1clean,0.00005))
   sf.speciesBasin <- st_sf(sf.speciesBasin)
   sf.speciesBasin$sbid <- "P.unifilis"
-  st_write(sf.speciesBasin, "spciesBasin.shp")
+  st_write(sf.speciesBasin, "speciesBasin.shp")
   
   #sin <- file.choose()
   # this file has second feature covering holes and slivers
@@ -53,7 +53,6 @@ prepBasin <- function(Bain = NA, make_shape = FALSE){
   #sf.td <- st_sf(sf.td)
   #sf.td$sbid <- "P.unifilis"
   #st_write(sf.td, "speciesBasin.shp")
-  
   }
   
   return(sf1clean)
