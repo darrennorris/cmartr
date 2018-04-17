@@ -23,6 +23,11 @@ subbasins in species range of occurance.}
 \value{
 List with objects of class sf with attribute data 
 used to generate result tables. Optionally writes shapefiles.
+riverb (sf.rivb) = 4629 river lines with basin attributes.
+riverbc (sf.rivb2) = 4791 river lines with basin and country attributes.
+riverpbc (sf.riv) = 2519 river lines with PA class, basin and country.
+basinc (sfclean3395c) = 71 polygons with basin and country.
+basinp (pac3395) = 169 polygons with PA class basin and country.
 }
 \description{
 Generates sf objects with attributes for Table values. Optionally exports
@@ -49,7 +54,7 @@ BC <- system.file("shape/basinpacover.shp", package="cmartr")
 rin <- system.file("shape/sa_strwgs84.shp", package="cmartr")
 
 # run
-listsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
+lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
   pBasinC = BC, riv = rin, make_shape = FALSE)
 }
 }

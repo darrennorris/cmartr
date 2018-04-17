@@ -8,11 +8,14 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 Imports:
     dplyr,
+    htmlTable,
     lwgeom,
     magrittr,
-    units,
+    plyr,
+    reshape2,
     rnaturalearth,
-    sf
+    sf,
+    units,
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
