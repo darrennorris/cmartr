@@ -15,7 +15,7 @@ Imports:
     reshape2,
     rnaturalearth,
     sf,
-    units,
+    units
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

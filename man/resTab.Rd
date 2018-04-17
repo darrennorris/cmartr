@@ -19,6 +19,6 @@ Generates html files with Table values.
 \dontrun{
 lsf <-  prepTabcover(pBasin = B, pBasinSp = Bsp, 
 pBasinC = BC, riv = rin, make_shape = FALSE)
-resTab <- (listsf = lsf)
+resTab(listsf = lsf)
 }
 }
