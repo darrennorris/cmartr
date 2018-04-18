@@ -4,10 +4,12 @@
 \alias{resTab}
 \title{Create Table 1 and Table 2}
 \usage{
-resTab(listsf = NA)
+resTab(listsf = NA, make_html = FALSE)
 }
 \arguments{
 \item{listsf}{List of five sf objects created by prepTabcover.R}
+
+\item{make_html}{Logical (TRUE/FALSE). Should html tables be written.}
 }
 \value{
 Creates html tables with values used in article.

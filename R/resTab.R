@@ -3,6 +3,7 @@
 #' @description Generates html files with Table values. 
 #'
 #' @param listsf List of five sf objects created by prepTabcover.R
+#' @param make_html Logical (TRUE/FALSE). Should html tables be written.
 #'
 #' @return Creates html tables with values used in article.
 #' @export
@@ -13,7 +14,7 @@
 #' pBasinC = BC, riv = rin, make_shape = FALSE)
 #' resTab(listsf = lsf)
 #' }
-resTab <- function(listsf = NA){
+resTab <- function(listsf = NA, make_html = FALSE){
   
   dc3bc <- plyr::ddply(listsf$basinc, c("name"), summarise, 
                        subbasin_n = length(unique(subbasinT)),
@@ -60,11 +61,7 @@ resTab <- function(listsf = NA){
   cout <- c("name", "subbasin_n", "subbasin_area", "akm_patot", "akm_nopa", 
             "pa_aprop", "flag_aich17a", "flag_aich50a", "rkm", "rkm_patot", 
             "rkm_nopa", "pa_rprop", "flag_aich17", "flag_aich50")
-  t1out <- htmlTable::htmlTable(htmlTable::txtRound(basinc[, cout], 1))
-  sink("inst/ms_res/tab1riv.html")
-  print(t1out, type="html", useViewer = FALSE)
-  sink()
-  
+
   # Table 2 river summaries
   dc <- plyr::ddply(listsf$riverpbc, c("arearnk", "paclass"), summarise,
                     totr = round(sum(as.numeric(lenrpa_km)),3)
@@ -144,11 +141,6 @@ resTab <- function(listsf = NA){
                 "area_Mkm2", "aMkm_patot", "aMkm_nopa", 
                 "pa_rprop", "rkmout","rkm", "rkm_patot", "rkm_nopa")
   
-  t2out <- htmlTable::htmlTable(newdata[, mycnames], rnames=FALSE)
-  sink("inst/ms_res/tab2riv.html")
-  print(t2out, type="html", useViewer = FALSE)
-  sink()
-  
   # Basin totals
   # countries in each basin
   bs <- merge(
@@ -165,10 +157,27 @@ resTab <- function(listsf = NA){
                 rkm_nopa = sum(rkm_nopa)
     ) 
   )
+   # write tables in html format 
+  if(make_html!=FALSE){
+    t1out <- htmlTable::htmlTable(htmlTable::txtRound(basinc[, cout], 1))
+    sink("inst/ms_res/tab1riv.html")
+    print(t1out, type="html", useViewer = FALSE)
+    sink()
+    
+    t2out <- htmlTable::htmlTable(newdata[, mycnames], rnames=FALSE)
+    sink("inst/ms_res/tab2riv.html")
+    print(t2out, type="html", useViewer = FALSE)
+    sink()
     
     t2outb <- htmlTable::htmlTable(bs, rnames=FALSE)
     sink("inst/ms_res/tab2rivBasin.html")
     print(t2outb, type="html", useViewer = FALSE)
     sink()
+    
+  }
+    
+    listout <- list(t1out = basinc[, cout], t2out = newdata[, mycnames], 
+                    t2outb = bs)
+    return(listout)
  
 }
