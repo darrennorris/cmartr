@@ -10,7 +10,7 @@ prepTabcover(pBasin = NA, pBasinSp = NA, pBasinC = NA, riv = NA,
 \arguments{
 \item{pBasin}{Subbasin cover polygons.}
 
-\item{pBasinSp}{Extent polygon polygon covering 
+\item{pBasinSp}{Extent polygon covering 
 subbasins in species range of occurance.}
 
 \item{pBasinC}{PA cover in subbasins with country.}

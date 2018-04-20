@@ -4,7 +4,7 @@
 #' polygon as shapefile.
 #' 
 #' @param pBasin Subbasin cover polygons.
-#' @param pBasinSp Extent polygon polygon covering 
+#' @param pBasinSp Extent polygon covering 
 #' subbasins in species range of occurance.
 #' @param pBasinC PA cover in subbasins with country.
 #' @param riv River lines.
