@@ -5,7 +5,7 @@
 \title{Prepare polygons for Table calculations}
 \usage{
 prepTabcover(pBasin = NA, pBasinSp = NA, pBasinC = NA, riv = NA,
-  make_shape = FALSE)
+  rastAc = NA, make_shape = FALSE)
 }
 \arguments{
 \item{pBasin}{Subbasin cover polygons.}
@@ -17,12 +17,15 @@ subbasins in species range of occurance.}
 
 \item{riv}{River lines.}
 
+\item{rastAc}{Raster brick with acessibility values.}
+
 \item{make_shape}{Logical (TRUE/FALSE). Generate polygon shapefiles of
 ......}
 }
 \value{
 List with objects of class sf with attribute data 
-used to generate result tables. Optionally writes shapefiles.
+used to generate result tables (epsg = 3395). 
+Optionally writes shapefiles.
 riverb (sf.rivb) = 4629 river lines with basin attributes.
 riverbc (sf.rivb2) = 4791 river lines with basin and country attributes.
 riverpbc (sf.riv) = 2519 river lines with PA class, basin and country.
@@ -52,9 +55,11 @@ Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
 BC <- system.file("shape/basinpacover.shp", package="cmartr")
 # River lines.
 rin <- system.file("shape/sa_strwgs84.shp", package="cmartr")
+# Brick with acessibility raster
+ras1 <- system.file("raster/uas.grd", package="cmartr")
 
 # run
 lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
-  pBasinC = BC, riv = rin, make_shape = FALSE)
+  pBasinC = BC, riv = rin, rastAc = ras1, make_shape = FALSE)
 }
 }

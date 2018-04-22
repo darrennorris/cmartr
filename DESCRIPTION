@@ -13,11 +13,15 @@ Imports: dplyr,
     htmlTable,
     lwgeom,
     magrittr,
+    methods,
     plyr,
+    raster,
     reshape2,
     rnaturalearth,
     rnaturalearthdata,
     sf,
+    sp,
+    stats,
     units
 License: file LICENSE
 Encoding: UTF-8

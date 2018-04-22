@@ -41,11 +41,18 @@ B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
 # Extent polygon covering subbasins in species range of occurance.
 # From prepBasin.R .
 Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
+# PA cover in subbasins with country. From prepPAcountry.R 
+BC <- system.file("shape/basinpacover.shp", package="cmartr")
+# River lines.
+rin <- system.file("shape/sa_strwgs84.shp", package="cmartr")
+# Brick with acessibility raster
+ras1 <- system.file("raster/uas.grd", package="cmartr")
 
 # run
 lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
-  pBasinC = BC, riv = rin, make_shape = FALSE)
+  pBasinC = BC, riv = rin, rastAc = ras1, make_shape = FALSE)
 lt <- resTab(listsf = lsf)
+
 lfig1 <- resFig1(listsf = lsf, listTab = lt, pBasin = B, 
   pBasinSp = Bsp, make_png = FALSE)
 
