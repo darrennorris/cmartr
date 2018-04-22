@@ -5,7 +5,7 @@
 \title{Create Figure 1}
 \usage{
 resFig1(listsf = NA, listTab = NA, pBasin = NA, pBasinSp = NA,
-  make_png = FALSE)
+  pBasinAcc = NA, make_png = FALSE)
 }
 \arguments{
 \item{listsf}{List of five sf objects created by prepTabcover.R}
@@ -16,6 +16,9 @@ resFig1(listsf = NA, listTab = NA, pBasin = NA, pBasinSp = NA,
 
 \item{pBasinSp}{Extent polygon covering 
 subbasins in species range of occurance.}
+
+\item{pBasinAcc}{Subbasin cover polygons with human access proportion,
+from demog_river.R (SAGA (grid tools, grids stats for poly)).}
 
 \item{make_png}{Logical (TRUE/FALSE). Generate png version of Fig 1.}
 }
@@ -34,27 +37,21 @@ Optionally exports Figure 1 as png.
 # https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
 # For the code below to work, 
 # extract files in "shapes.zip" to cmartr/inst/shape .
-# This function needs 2 shapefiles as listed below.
+# This function needs 3 shapefiles as listed below.
 
 # Subbasin cover polygons
 B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
 # Extent polygon covering subbasins in species range of occurance.
 # From prepBasin.R .
 Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
-# PA cover in subbasins with country. From prepPAcountry.R 
-BC <- system.file("shape/basinpacover.shp", package="cmartr")
-# River lines.
-rin <- system.file("shape/sa_strwgs84.shp", package="cmartr")
-# Brick with acessibility raster
-ras1 <- system.file("raster/uas.grd", package="cmartr")
-
+# Human access from demog_river.R . Need to add earlier in prep stages.
+BAc <- system.file("shape/basinsum4326.shp", package="cmartr")
 # run
 lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
-  pBasinC = BC, riv = rin, rastAc = ras1, make_shape = FALSE)
+  pBasinC = BC, riv = rin, make_shape = FALSE)
 lt <- resTab(listsf = lsf)
-
 lfig1 <- resFig1(listsf = lsf, listTab = lt, pBasin = B, 
-  pBasinSp = Bsp, make_png = FALSE)
+  pBasinSp = Bsp, pBasinAcc = BAc, make_png = FALSE)
 
 }
 }
