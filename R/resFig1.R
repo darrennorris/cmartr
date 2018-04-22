@@ -147,7 +147,7 @@ f1e <- ggplot(sfclean) +
   geom_sf(aes(fill = prop_accB * 100)) +
   scale_fill_gradientn("% \n< 49 km", 
                        colours = c("darkblue", "lightblue", "tomato1", "darkred"), 
-                       values = c(0,0.5,0.501,1)) +
+                       values = c(0,0.45,0.4501,1)) +
   coord_sf(xlim = c(-80, -43), ylim = c(-20, 10)) +
   theme_bw() +
   theme(legend.margin=margin(t=0, r=0, b=0, l= -0.2, unit="cm")) +
