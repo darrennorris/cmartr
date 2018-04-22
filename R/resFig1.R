@@ -151,7 +151,7 @@ f1e <- ggplot(sfclean) +
   coord_sf(xlim = c(-80, -43), ylim = c(-20, 10)) +
   theme_bw() +
   theme(legend.margin=margin(t=0, r=0, b=0, l= -0.2, unit="cm")) +
-  ggtitle("C) Human accessibility cover")
+  ggtitle("E) Human accessibility cover")
 
 # Acess by country
 f1f <- ggplot(pac) +
@@ -160,13 +160,13 @@ f1f <- ggplot(pac) +
   geom_sf(data = sfcatch2, size=1,color="yellow", fill=NA, lty=2) +
   geom_sf(aes(fill = prop_accC * 100), size = 0.3) +
   scale_fill_gradientn("% \n< 49 km", 
-                       colours = c("darkblue", "lightblue", "tomato1", "darkred"), 
-                       values = c(0,0.5,0.501,1)) +
+                       colours = c("skyblue3", "lightblue", "tomato1", "darkred"), 
+                       values = c(0,0.005,0.0511,1)) +
   geom_sf(data = sfcoun, size = 1, color="black", fill=NA) +
   coord_sf(xlim = c(-80, -43), ylim = c(-20, 10)) +
   theme_bw() +
   theme(legend.margin=margin(t=0, r=0, b=0, l= -0.2, unit="cm")) +
-  ggtitle("D) Protected area cover")
+  ggtitle("F) Human accessibility cover")
 
 # Population by basin
 f1g <- ggplot(sfclean) +
