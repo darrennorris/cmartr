@@ -8,6 +8,8 @@
 #' @param pBasin Subbasin cover polygons.
 #' @param pBasinSp Extent polygon covering 
 #' subbasins in species range of occurance.
+#' @param  pBasinAcc Subbasin cover polygons with human access proportion,
+#' from demog_river.R (SAGA (grid tools, grids stats for poly)).
 #' @param make_png Logical (TRUE/FALSE). Generate png version of Fig 1.
 #'
 #' @return List of plots created by ggplot2. Optionally exports as png.
@@ -24,25 +26,26 @@
 #' # https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
 #' # For the code below to work, 
 #' # extract files in "shapes.zip" to cmartr/inst/shape .
-#' # This function needs 2 shapefiles as listed below.
+#' # This function needs 3 shapefiles as listed below.
 #' 
 #' # Subbasin cover polygons
 #' B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
 #' # Extent polygon covering subbasins in species range of occurance.
 #' # From prepBasin.R .
 #' Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
-#' 
+#' # Human access from demog_river.R . Need to add earlier in prep stages.
+#' BAc <- system.file("shape/basinsum4326.shp", package="cmartr")
 #' # run
 #' lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
 #'   pBasinC = BC, riv = rin, make_shape = FALSE)
 #
 #' lt <- resTab(listsf = lsf)
 #' lfig1 <- resFig1(listsf = lsf, listTab = lt, pBasin = B, 
-#'   pBasinSp = Bsp, make_png = FALSE)
+#'   pBasinSp = Bsp, pBasinAcc = BAc, make_png = FALSE)
 #' 
 #' }
 resFig1 <- function(listsf = NA, listTab = NA, pBasin = NA, 
-                    pBasinSp = NA, make_png = FALSE){
+                    pBasinSp = NA, pBasinAcc = NA, make_png = FALSE){
 
 # load data
 sfcoun<- rnaturalearth::ne_countries(continent = "South America", 
@@ -56,6 +59,7 @@ sfclean <- merge(sfclean, lt$t2out)
 sfclean$F_prop <- (sfclean$rkm / sum(sfclean$rkm))
 sfcatch2 <- read_sf(pBasinSp)
 sfpa <- st_transform(lsf$basinp, crs=4326)
+sfacc <- read_sf()
 # by country
 pac <- merge(st_transform(lsf$basinc, crs = 4326), lt$t1out)
 pac$F_prop <- (pac$rkm / sum(sfclean$rkm))
