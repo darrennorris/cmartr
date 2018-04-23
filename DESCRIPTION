@@ -22,7 +22,8 @@ Imports: dplyr,
     sf,
     sp,
     stats,
-    units
+    units,
+    viridis
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

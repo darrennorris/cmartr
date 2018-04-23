@@ -10,6 +10,7 @@
 #' subbasins in species range of occurance.
 #' @param  pBasinAcc Subbasin cover polygons with human access proportion,
 #' from demog_river.R (SAGA (grid tools, grids stats for poly)).
+#' @param rastAc Acessibility raster.
 #' @param make_png Logical (TRUE/FALSE). Generate png version of Fig 1.
 #'
 #' @return List of plots created by ggplot2. Optionally exports as png.
@@ -17,6 +18,7 @@
 #' @importFrom grDevices dev.off png
 #' @importFrom gridExtra grid.arrange
 #' @importFrom stats na.omit
+#' @importFrom viridis scale_fill_viridis
 #' @export
 #'
 #' @examples
@@ -36,19 +38,40 @@
 #' Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
 #' # Human access from demog_river.R . Need to add earlier in prep stages.
 #' BAc <- system.file("shape/basinsum4326.shp", package="cmartr")
+#' # Human aceesibility raster
+#' ras1 <- system.file("raster/uas.grd", package="cmartr")
 #' # run
 #' lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
 #'   pBasinC = BC, riv = rin, make_shape = FALSE)
 #
 #' lt <- resTab(listsf = lsf)
 #' lfig1 <- resFig1(listsf = lsf, listTab = lt, pBasin = B, 
-#'   pBasinSp = Bsp, pBasinAcc = BAc, make_png = FALSE)
+#'   pBasinSp = Bsp, pBasinAcc = BAc, rastAc = ras1, make_png = FALSE)
 #' 
 #' }
 resFig1 <- function(listsf = NA, listTab = NA, pBasin = NA, 
-                    pBasinSp = NA, pBasinAcc = NA, make_png = FALSE){
+                    pBasinSp = NA, pBasinAcc = NA, rastAc = NA, make_png = FALSE){
 
 # load data
+  #big spatial processing needs memeory
+  memory.limit(84000)
+  
+  #Acessibility raster
+  # raster to points SP, then sf transform to dataframe for ggplot2
+  sall <- raster::brick(rastAc)
+  ru <- sall[["Dist..km."]]
+  # proj.4 projection description
+  newproj <- "+proj=longlat +datum=WGS84 +no_defs"
+  #18:35 - 18:38
+  pr1 <- raster::projectRaster(ru, crs=newproj, res = 0.00930)
+  # convert to points hack
+  myPoints <- raster::rasterToPoints(pr1)
+  myDataFrame <- data.frame(myPoints)
+  names(myDataFrame)
+  colnames(myDataFrame) <- c("X", "Y", "Values")
+  rm("sall")
+  rm("ru")
+  rm("pr1")
 sfcoun<- rnaturalearth::ne_countries(continent = "South America", 
                                      type = 'map_units', returnclass = "sf")
 sfcoun <- st_sf(a= rep(1,14), geom=st_geometry(sfcoun))
@@ -102,7 +125,17 @@ f1a <- ggplot(sfpa) +
   theme(legend.margin=margin(t=0, r=0, b=0, l= -0.2, unit="cm")) +
   ggtitle("A) Protected area type")
 
-f1b <- NA
+f1b <- ggplot(sfcounD) + 
+  geom_sf(data = sfcounD) +
+  geom_raster(data=myDataFrame, aes(y = Y, x = X, fill = Values)) +
+  scale_fill_viridis(name = "Dist (km)") +
+  geom_sf(data = sfcoun, size= 1.7, color="white", fill=NA) +
+  geom_sf(data = sfcatch2, size = 1.1, color="black", fill=NA) +
+  geom_sf(data = sfcatch2, size=1,color="yellow", fill=NA, lty=2) +
+  coord_sf(xlim = c(-80, -43), ylim = c(-20, 10))+
+  theme_bw() + ylab("") + xlab("") +
+  theme(legend.margin=margin(t=0, r=0, b=0, l= -0.2, unit="cm")) +
+  ggtitle("B) Proximity to people")
 
 # PA coverage by basin
 # predefined colours
@@ -194,13 +227,13 @@ f1h <- ggplot(pac) +
   ggtitle("H) Podocnemis unifilis")
 
 if(make_png!=FALSE){
-  lay <- rbind(c(1,NA),
+  lay <- rbind(c(1,2),
                c(3,4),
                c(5,6),
                c(7,8))
   png("f1.png", width = 7, height = 10, 
       units = 'in', res = 600, type="cairo-png")
-  gridExtra::grid.arrange(f1a, f1c, f1d, f1e, f1f, f1g, f1h, layout_matrix = lay)
+  gridExtra::grid.arrange(f1a, f1b, f1c, f1d, f1e, f1f, f1g, f1h, layout_matrix = lay)
   dev.off()
 }
 
