@@ -5,7 +5,7 @@
 \title{Create Figure 1}
 \usage{
 resFig1(listsf = NA, listTab = NA, pBasin = NA, pBasinSp = NA,
-  pBasinAcc = NA, make_png = FALSE)
+  pBasinAcc = NA, rastAc = NA, make_png = FALSE)
 }
 \arguments{
 \item{listsf}{List of five sf objects created by prepTabcover.R}
@@ -19,6 +19,8 @@ subbasins in species range of occurance.}
 
 \item{pBasinAcc}{Subbasin cover polygons with human access proportion,
 from demog_river.R (SAGA (grid tools, grids stats for poly)).}
+
+\item{rastAc}{Acessibility raster.}
 
 \item{make_png}{Logical (TRUE/FALSE). Generate png version of Fig 1.}
 }
@@ -46,12 +48,14 @@ B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
 Bsp <- system.file("shape/speciesBasin.shp", package="cmartr")
 # Human access from demog_river.R . Need to add earlier in prep stages.
 BAc <- system.file("shape/basinsum4326.shp", package="cmartr")
+# Human aceesibility raster
+ras1 <- system.file("raster/uas.grd", package="cmartr")
 # run
 lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
   pBasinC = BC, riv = rin, make_shape = FALSE)
 lt <- resTab(listsf = lsf)
 lfig1 <- resFig1(listsf = lsf, listTab = lt, pBasin = B, 
-  pBasinSp = Bsp, pBasinAcc = BAc, make_png = FALSE)
+  pBasinSp = Bsp, pBasinAcc = BAc, rastAc = ras1, make_png = FALSE)
 
 }
 }
