@@ -21,9 +21,11 @@
 #' }
 resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
   
+  # need to correct error with making "key_area" in listsf$basinc,
+  # is duplicating rows.....
   dc3bc <- plyr::ddply(listsf$basinc, c("name"), summarise, 
                        subbasin_n = length(unique(subbasinT)),
-                       subbasin_area = sum(areab_km)
+                       subbasin_area = sum(unique(areab_km))
   )
   
   # subasin PA per country
