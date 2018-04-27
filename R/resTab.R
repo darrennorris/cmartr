@@ -3,18 +3,23 @@
 #' @description Generates html files with Table values. 
 #'
 #' @param listsf List of five sf objects created by prepTabcover.R
+#' @param input_rp Location with points of river sections.
 #' @param make_html Logical (TRUE/FALSE). Should html tables be written.
 #'
 #' @return Creates html tables with values used in article.
+#' @import sf
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' lsf <-  prepTabcover(pBasin = B, pBasinSp = Bsp, 
 #' pBasinC = BC, riv = rin, make_shape = FALSE)
-#' resTab(listsf = lsf)
+#' # hack to get folder path
+#' rp <- system.file("shape/shapes_rivers3395", package="cmartr")
+#' # run
+#' lt <- resTab(listsf = lsf, input_rp = rp, make_html = TRUE)
 #' }
-resTab <- function(listsf = NA, make_html = FALSE){
+resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
   
   dc3bc <- plyr::ddply(listsf$basinc, c("name"), summarise, 
                        subbasin_n = length(unique(subbasinT)),
@@ -58,9 +63,88 @@ resTab <- function(listsf = NA, make_html = FALSE){
   bt$flag_aich50a <- ifelse(bt$pa_aprop > 49.99999,1,0)
   basinc <- merge(bt, basinc)
   
+  # now acessibility
+  myfiles <- file.info(list.files(input_rp, pattern = ".shp", full=TRUE))
+  
+  # 215866
+  sf.rivp <- rbind(read_sf(rownames(myfiles)[1]), 
+                   read_sf(rownames(myfiles)[2]),
+                   read_sf(rownames(myfiles)[3]),
+                   read_sf(rownames(myfiles)[4]),
+                   read_sf(rownames(myfiles)[5]),
+                   read_sf(rownames(myfiles)[6]),
+                   read_sf(rownames(myfiles)[7]),
+                   read_sf(rownames(myfiles)[8]),
+                   read_sf(rownames(myfiles)[9]),
+                   read_sf(rownames(myfiles)[10]),
+                   read_sf(rownames(myfiles)[11]),
+                   read_sf(rownames(myfiles)[12]),
+                   read_sf(rownames(myfiles)[13]),
+                   read_sf(rownames(myfiles)[14]),
+                   read_sf(rownames(myfiles)[15]),
+                   read_sf(rownames(myfiles)[16]),
+                   read_sf(rownames(myfiles)[17]),
+                   read_sf(rownames(myfiles)[18]),
+                   read_sf(rownames(myfiles)[19]),
+                   read_sf(rownames(myfiles)[20]),
+                   read_sf(rownames(myfiles)[21]),
+                   read_sf(rownames(myfiles)[22]),
+                   read_sf(rownames(myfiles)[23]),
+                   read_sf(rownames(myfiles)[24]),
+                   read_sf(rownames(myfiles)[25]),
+                   read_sf(rownames(myfiles)[26]),
+                   read_sf(rownames(myfiles)[27]),
+                   read_sf(rownames(myfiles)[28]),
+                   read_sf(rownames(myfiles)[29]),
+                   read_sf(rownames(myfiles)[30]),
+                   read_sf(rownames(myfiles)[31]),
+                   read_sf(rownames(myfiles)[32]),
+                   read_sf(rownames(myfiles)[33]),
+                   read_sf(rownames(myfiles)[34]),
+                   read_sf(rownames(myfiles)[35]),
+                   read_sf(rownames(myfiles)[36]),
+                   read_sf(rownames(myfiles)[37]),
+                   read_sf(rownames(myfiles)[38]),
+                   read_sf(rownames(myfiles)[39]),
+                   read_sf(rownames(myfiles)[40]),
+                   read_sf(rownames(myfiles)[41]),
+                   read_sf(rownames(myfiles)[42]),
+                   read_sf(rownames(myfiles)[43]),
+                   read_sf(rownames(myfiles)[44]),
+                   read_sf(rownames(myfiles)[45]),
+                   read_sf(rownames(myfiles)[46]),
+                   read_sf(rownames(myfiles)[47]),
+                   read_sf(rownames(myfiles)[48]),
+                   read_sf(rownames(myfiles)[49]),
+                   read_sf(rownames(myfiles)[50]),
+                   read_sf(rownames(myfiles)[51]),
+                   read_sf(rownames(myfiles)[52])
+  )
+  
+  # add country borders to rivers and basin
+  nec <- rnaturalearth::ne_countries(continent = "South America", 
+                                     type = 'map_units', returnclass = "sf")
+  nec3395 <- sf::st_transform(nec, crs=3395)
+  st_crs(sf.rivp) <- st_crs(nec3395)
+  
+  # points with country
+  sf.rivpc <- sf::st_intersection(sf.rivp, nec3395)
+  dt1 <- plyr::ddply(sf.rivpc, c("name", "accessible", "All"), summarise,
+               tot_km = length(na.omit(All))
+  )
+  dt1 <- na.omit(dt1)
+  dt1$AllF <- as.factor(dt1$All)
+  levels(dt1$AllF) <- c("non-pa", "pa")
+  dt1$aflag <- paste(dt1$accessible, dt1$AllF, sep = "_")
+  dt1w <- reshape2::dcast(dt1, name ~ aflag, fill = 0, value.var = "tot_km")
+  dt1w$tot_kmac <- dt1w$`No_non-pa` + dt1w$No_pa + dt1w$`Yes_non-pa` + dt1w$Yes_pa
+  myc <- c("name", "Yes_pa", "Yes_non-pa", "No_pa", "No_non-pa", "tot_kmac")
+  basinc <- merge(basinc, dt1w[, myc])
+  
   cout <- c("name", "subbasin_n", "subbasin_area", "akm_patot", "akm_nopa", 
             "pa_aprop", "flag_aich17a", "flag_aich50a", "rkm", "rkm_patot", 
-            "rkm_nopa", "pa_rprop", "flag_aich17", "flag_aich50")
+            "rkm_nopa", "pa_rprop", "flag_aich17", "flag_aich50", 
+            "Yes_pa", "Yes_non-pa", "No_pa", "No_non-pa", "tot_kmac")
 
   # Table 2 river summaries
   dc <- plyr::ddply(listsf$riverpbc, c("arearnk", "paclass"), summarise,

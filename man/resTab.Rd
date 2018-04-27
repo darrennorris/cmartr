@@ -4,10 +4,12 @@
 \alias{resTab}
 \title{Create Table 1 and Table 2}
 \usage{
-resTab(listsf = NA, make_html = FALSE)
+resTab(listsf = NA, input_rp = NA, make_html = FALSE)
 }
 \arguments{
 \item{listsf}{List of five sf objects created by prepTabcover.R}
+
+\item{input_rp}{Location with points of river sections.}
 
 \item{make_html}{Logical (TRUE/FALSE). Should html tables be written.}
 }
@@ -21,6 +23,9 @@ Generates html files with Table values.
 \dontrun{
 lsf <-  prepTabcover(pBasin = B, pBasinSp = Bsp, 
 pBasinC = BC, riv = rin, make_shape = FALSE)
-resTab(listsf = lsf)
+# hack to get folder path
+rp <- system.file("shape/shapes_rivers3395", package="cmartr")
+# run
+lt <- resTab(listsf = lsf, input_rp = rp, make_html = TRUE)
 }
 }
