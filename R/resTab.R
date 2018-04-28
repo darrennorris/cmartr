@@ -128,9 +128,9 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
                                      type = 'map_units', returnclass = "sf")
   nec3395 <- sf::st_transform(nec, crs=3395)
   st_crs(sf.rivp) <- st_crs(nec3395)
-  
-  # points with country
   sf.rivpc <- sf::st_intersection(sf.rivp, nec3395)
+  
+  # Access points with country
   dt1 <- plyr::ddply(sf.rivpc, c("name", "accessible", "All"), summarise,
                tot_km = length(na.omit(All))
   )
@@ -172,7 +172,7 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
                       rkm = round(sum(as.numeric(lenrb_km)),3)
   )
   # 9 subbsins with differences, max diff = 4.7
-  data.frame(old = dc3$rkm, new = dc3c$rkm, diffr = dc3$rkm - dc3c$rkm)
+  #data.frame(old = dc3$rkm, new = dc3c$rkm, diffr = dc3$rkm - dc3c$rkm)
   
   # Table 2 subbasin areas
   t2ba <- plyr::ddply(listsf$basinc, c("arearank", "BASIN_NAME", "subbasinT"), summarise, 
@@ -227,7 +227,22 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
                 "area_Mkm2", "aMkm_patot", "aMkm_nopa", 
                 "pa_rprop", "rkmout","rkm", "rkm_patot", "rkm_nopa")
   
-  # Basin totals
+  # Table 2 accessibility
+  # Access points with country
+  dt1b <- plyr::ddply(sf.rivpc, c("BASIN_N", "subbasn", "accessible", "All"), 
+                      summarise,
+                     tot_km = length(na.omit(All))
+  )
+  dt1b <- na.omit(dt1b)
+  dt1b$AllF <- as.factor(dt1b$All)
+  levels(dt1b$AllF) <- c("non-pa", "pa")
+  dt1b$aflag <- paste(dt1b$accessible, dt1b$AllF, sep = "_")
+  dt1bw <- reshape2::dcast(dt1b, BASIN_N + subbasn ~ aflag, fill = 0, value.var = "tot_km")
+  dt1bw$tot_kmac <- dt1bw$`No_non-pa` + dt1bw$No_pa + dt1bw$`Yes_non-pa` + dt1bw$Yes_pa
+  mycb <- c("BASIN_N", "subbasn", "Yes_pa","Yes_non-pa", "No_pa", "No_non-pa", "tot_kmac") 
+  tab2acc <- dt1bw[, mycb]
+
+  # Table 2 Basin totals
   # countries in each basin
   bs <- merge(
     plyr::ddply(listsf$basinc, ("BASIN_NAME"), summarise, 
@@ -263,7 +278,7 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
   }
     
     listout <- list(t1out = basinc[, cout], t2out = newdata[, mycnames], 
-                    t2outb = bs)
+                    t2outac = tab2acc, t2outb = bs)
     return(listout)
  
 }
