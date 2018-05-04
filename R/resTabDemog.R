@@ -2,6 +2,7 @@
 #' @title Create summary for population scenarios in Table 1.
 
 #' @param demogC Country level population projections from "demogCountry.R"
+#' @param make_html Logical (TRUE/FALSE). Should html tables be written.
 #' 
 #' @description Used in Table 1.
 #' Generates dataframe with country level summary of population projections.
@@ -15,9 +16,9 @@
 #' lt <- resTab(listsf = lsf, input_rp = rp, make_html = FALSE)
 #' popc <- "C:\\Users\\Darren\\Documents\\2018 Unifilis demography\\analysis\\dfpop.RDS"
 #' demogC <- demogCountry(popc = popc, rlc = lt$rlc)
-#' dfsum <- resTabDemog(demogC = demogC)
+#' dfsum <- resTabDemog(demogC = demogC, make_html = FALSE)
 #' }
-resTabDemog <- function(demogC = NA){
+resTabDemog <- function(demogC = NA, make_html = FALSE){
   
   dfpop.res <- demogC
   # Business as usual 
@@ -159,6 +160,21 @@ resTabDemog <- function(demogC = NA){
   dfsum$SP_flag_30 <- ifelse(dfsum$SP_female_change < -29.999, 1,0)
   dfsum$CM_flag_50 <- ifelse(dfsum$CM_female_change < -49.999, 1,0)
   dfsum$CM_flag_30 <- ifelse(dfsum$CM_female_change < -29.999, 1,0) 
+  
+    if(make_html!=FALSE){
+      tab1demog <- data.frame(country = dfsum$name, 
+                              BAU = paste(round(dfsum$BAU_female/1000000,2) , 
+                                          round(dfsum$BAU_female_change,1), sep=" / "),
+                              SP = paste(round(dfsum$SP_female/1000000,2) , 
+                                         round(dfsum$SP_female_change,1), sep=" / "), 
+                              CBM = paste(round(dfsum$CM_female/1000000,2) , 
+                                          round(dfsum$CM_female_change,1), sep=" / ") 
+      )
+    t1out <- htmlTable::htmlTable(tab1demog)
+    sink("inst/ms_res/tab1demog.html")
+    print(t1out, type="html", useViewer = FALSE)
+    sink()
+    }
   
   return(dfsum)
   

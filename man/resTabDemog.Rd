@@ -4,10 +4,12 @@
 \alias{resTabDemog}
 \title{Create summary for population scenarios in Table 1.}
 \usage{
-resTabDemog(demogC = NA)
+resTabDemog(demogC = NA, make_html = FALSE)
 }
 \arguments{
 \item{demogC}{Country level population projections from "demogCountry.R"}
+
+\item{make_html}{Logical (TRUE/FALSE). Should html tables be written.}
 }
 \value{
 Data.frame with country level summary of population projections for three scenarios.
@@ -25,6 +27,6 @@ Title
 lt <- resTab(listsf = lsf, input_rp = rp, make_html = FALSE)
 popc <- "C:\\\\Users\\\\Darren\\\\Documents\\\\2018 Unifilis demography\\\\analysis\\\\dfpop.RDS"
 demogC <- demogCountry(popc = popc, rlc = lt$rlc)
-dfsum <- resTabDemog(demogC = demogC)
+dfsum <- resTabDemog(demogC = demogC, make_html = FALSE)
 }
 }
