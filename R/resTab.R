@@ -167,6 +167,25 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
                       tot_use = sum(na.omit(tot_use))
   )
   
+  # River length per basin and country, in format for demography model
+  dtc1b <- plyr::ddply(sf.rivpc, c("BASIN_N",  "name", "subbasn","accessible", "All", 
+                                  "Indigenous", "Strict", "Use"), summarise,
+                      tot_km = length(na.omit(All))
+  )
+  dtc1b <- na.omit(dtc1b)
+  dtc1b$tot_PA <- dtc1b$All*dtc1b$tot_km
+  dtc1b$tot_Ind <- dtc1b$Indigenous*dtc1b$tot_km
+  dtc1b$tot_SP <- dtc1b$Strict*dtc1b$tot_km
+  dtc1b$tot_use <- dtc1b$Use*dtc1b$tot_km
+  dtc2b <- plyr::ddply(dtc1b, c("BASIN_N",  "name", "subbasn", "accessible"), summarise,
+                      tot_km = sum(na.omit(tot_km)),
+                      tot_notPA = sum(na.omit(tot_km)) - sum(na.omit(tot_PA)),
+                      tot_PA = sum(na.omit(tot_PA)),
+                      tot_Ind = sum(na.omit(tot_Ind)),
+                      tot_SP = sum(na.omit(tot_SP)),
+                      tot_use = sum(na.omit(tot_use))
+  )
+  
   # Table 2 river summaries
   dc <- plyr::ddply(listsf$riverpbc, c("arearnk", "paclass"), summarise,
                     totr = round(sum(as.numeric(lenrpa_km)),3)
@@ -297,7 +316,7 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
   }
     
     listout <- list(t1out = basinc[, cout], t2out = newdata[, mycnames], 
-                    t2outac = tab2acc, t2outb = bs, rlc = dtc2)
+                    t2outac = tab2acc, t2outb = bs, rlc = dtc2, rlcb = dtc2b)
     return(listout)
  
 }
