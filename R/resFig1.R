@@ -231,7 +231,7 @@ if(make_png!=FALSE){
                c(3,4),
                c(5,6),
                c(7,8))
-  png("f1.png", width = 7, height = 10, 
+  png("inst/ms_res/f1.png", width = 7, height = 10, 
       units = 'in', res = 600, type="cairo-png")
   gridExtra::grid.arrange(f1a, f1b, f1c, f1d, f1e, f1f, f1g, f1h, layout_matrix = lay)
   dev.off()

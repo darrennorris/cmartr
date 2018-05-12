@@ -41,12 +41,12 @@ library(popdemo)
   
   dfin <- x$rdata
   #dfin <- l.gpop$`Podocnemis unifilis.headstart.0`$rdata
-  dout <- plyr::ddply(dfin, c("namekey", "accessible",
+  dout <- plyr::ddply(dfin, c("species", "atype", "increase","namekey", "accessible",
                               "variable", "prop_km", "dist_km"), doproj)
-  
-  dfn <- tidyr::separate(dfres, col = ".id", 
-                         c("species", "atype", "increase"), "\\.", 
-                         extra="merge" )
-  rm("dout")
-  dfn
+  #dfn <- data.frame(aid = aname, dout)
+  fn <- paste(dfin[1,'species'], dfin[1,'atype'], dfin[1,'increase'], sep="_")
+  fname <- paste(fn,"csv", sep = ".")
+  csvout <- paste("inst/ms_res/",fname, sep = "")
+  write.csv(dout, csvout, row.names = FALSE)
+  dout
 }

@@ -21,7 +21,8 @@ prepPop <- function(x){
   adultF.d <- 10 # adult female density per river km
   #distkm <- 100 # length of river
   dft2$adultF.n <- trunc(adultF.d * dft2$dist_km)
-  
+  dft2 <- data.frame(species = x$species, atype = x$type, 
+                     increase = x$increase, dft2)
   l1 <- list(rdata = dft2, tracajam = tracaja)
   
 }
