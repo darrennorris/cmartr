@@ -13,14 +13,14 @@ prepPop <- function(x){
   
   myq <- function(x){
     myquant <- seq(0.05,1,by=0.05)
-    dfout <- data.frame(propKM = myquant, distKM = x$distKMa * myquant)
+    dfout <- data.frame(prop_km = myquant, dist_km = x$distKMa * myquant)
     dfout
   }
   
   dft2 <- plyr::ddply(dft, c("namekey", "accessible", "variable"), myq)
   adultF.d <- 10 # adult female density per river km
   #distkm <- 100 # length of river
-  dft2$adultF.n <- trunc(adultF.d * dft2$distKM)
+  dft2$adultF.n <- trunc(adultF.d * dft2$dist_km)
   
   l1 <- list(rdata = dft2, tracajam = tracaja)
   
