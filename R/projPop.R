@@ -45,4 +45,10 @@ library(popdemo)
                               "variable", "propKM", "distKM"), doproj)
   
   dout
+  # now seperate tables, split by species, type (5 levels), increase (10 levels),
+  # and prop_km (20 levels)
+  # write.csv, push to postgre
+  # output is dataframe lookup table with 
+  # .csv name, postgre table name, values of interest
+  
 }
