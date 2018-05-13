@@ -1,4 +1,4 @@
-projPop <- function(x){
+projPop <- function(x, write_csv = FALSE, write_db = FALSE){
 library(popdemo)
   library(popbio)
   tracaja <- x$tracajam
@@ -43,10 +43,42 @@ library(popdemo)
   #dfin <- l.gpop$`Podocnemis unifilis.headstart.0`$rdata
   dout <- plyr::ddply(dfin, c("species", "atype", "increase","namekey", "accessible",
                               "variable", "prop_km", "dist_km"), doproj)
-  #dfn <- data.frame(aid = aname, dout)
+  
   fn <- paste(dfin[1,'species'], dfin[1,'atype'], dfin[1,'increase'], sep="_")
   fname <- paste(fn,"csv", sep = ".")
-  csvout <- paste("inst/ms_res/",fname, sep = "")
-  write.csv(dout, csvout, row.names = FALSE)
-  dout
+  csvout <- paste("inst/other/dataproj/",fname, sep = "")
+  
+  if(write_csv != FALSE){
+    write.csv(dout, csvout, row.names = FALSE)
+  }
+  
+  if(write_db != FALSE){
+    library(RPostgreSQL)
+    drv <- dbDriver('PostgreSQL')  
+    db <- 'postgres'  
+    host_db <- 'localhost'  
+    db_port <- '5432'  
+    db_user <- 'postgres'  
+    db_password <- 'bob1975'
+    
+    conn <- dbConnect(drv, dbname=db, host=host_db, 
+                      port=db_port, user=db_user, 
+                      password=db_password)
+
+    if(dbExistsTable(conn, c("turtles", "test"))){
+      dbWriteTable(conn, c("turtles", "test"), dout, 
+                   row.names = FALSE, 
+                   append = T)
+    }else{
+      dbWriteTable(conn, c("turtles", "test"), dout, 
+                   row.names = FALSE)
+      sql_command <- "ALTER TABLE turtles.test SET UNLOGGED;"
+      dbGetQuery(conn, sql_command)
+    }
+    dbDisconnect(conn) 
+  }
+  rm("dout")
+  dflup <- data.frame(species = dfin[1,'species'], atype = dfin[1,'atype'], dfin[1,'increase'],
+             fileout = csvout, csvname = fname)
+  dflup
 }
