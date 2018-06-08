@@ -41,10 +41,10 @@ library(popdemo)
   
   dfin <- x$rdata
   #dfin <- l.gpop$`Podocnemis unifilis.headstart.0`$rdata
-  dout <- plyr::ddply(dfin, c("species", "atype", "increase","namekey", "accessible",
+  dout <- plyr::ddply(dfin, c("species", "hunt", "increase","namekey", "accessible",
                               "variable", "prop_km", "dist_km"), doproj)
-  
-  fn <- paste(dfin[1,'species'], dfin[1,'atype'], dfin[1,'increase'], sep="_")
+  # multiply by 10 to avoid decimal points in file names
+  fn <- paste(dfin[1,'species'], dfin[1,'hunt'] * 10, dfin[1,'increase'] * 10, sep="_")
   fname <- paste(fn,"csv", sep = ".")
   csvout <- paste("inst/other/dataproj/",fname, sep = "")
   
@@ -78,7 +78,8 @@ library(popdemo)
     dbDisconnect(conn) 
   }
   rm("dout")
-  dflup <- data.frame(species = dfin[1,'species'], atype = dfin[1,'atype'], dfin[1,'increase'],
+  dflup <- data.frame(species = dfin[1,'species'], hunt = dfin[1,'hunt'], 
+                      increase = dfin[1,'increase'],
              fileout = csvout, csvname = fname)
   dflup
 }
