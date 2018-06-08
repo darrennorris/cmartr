@@ -29,5 +29,14 @@ writeconn <- function(x){
   }
   dbDisconnect(conn) 
   
+  # column size, 23 columns 10 GB, 0.435 GB 435 MB per column
+  # 100 / 23 , each column should be 4.347 %
+  sql_command <- "select
+  sum(pg_column_size('hunt')) as total_size,
+  avg(pg_column_size('hunt')) as average_size,
+  sum(pg_column_size('hunt')) * 100.0 / pg_relation_size('turtles.test') as percentage
+  from turtles.test;"
+  
+  dbGetQuery(conn, sql_command)
   
 }
