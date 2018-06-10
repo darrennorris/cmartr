@@ -1,181 +1,128 @@
 #' Title
 #' @title Create summary for population scenarios in Table 1.
 
-#' @param demogC Country level population projections from "demogCountry.R"
+#' @param ldemog List with population projections from "PopScen.R"
 #' @param make_html Logical (TRUE/FALSE). Should html tables be written.
 #' 
-#' @description Used in Table 1.
-#' Generates dataframe with country level summary of population projections.
+#' @description Used in Table 1, Supplemental Tables.
+#' Generates dataframe with summaries of population projections.
 #'
-#' @return Data.frame with country level summary of population projections for three scenarios.
+#' @return Data.frame with summaries of population projections for three scenarios.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' 
+#' #1) River length coverage
+#' lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
+#' pBasinC = BC, riv = rin, rastAc = ras1, make_shape = FALSE)
+#' rp <- system.file("shape/shapes_rivers3395", package="cmartr")
 #' lt <- resTab(listsf = lsf, input_rp = rp, make_html = FALSE)
-#' popc <- "C:\\Users\\Darren\\Documents\\2018 Unifilis demography\\analysis\\dfpop.RDS"
-#' demogC <- demogCountry(popc = popc, rlc = lt$rlc)
-#' dfsum <- resTabDemog(demogC = demogC, make_html = FALSE)
+#' atest <- lt$rlcb
+#' # add key and make sure all levels are represented
+#' atest$namekey <- paste(atest$BASIN_N, atest$name, atest$subbasn, sep = "_")
+#' riverl <- expand.grid(namekey = unique(atest$namekey), 
+#'                      accessible = unique(atest$accessible) )
+#' riverl <- merge(riverl, atest, all.x=TRUE)
+#' selNA <- which(is.na(riverl$tot_km))
+#' riverl[selNA, c("tot_km", "tot_notPA", "tot_PA", "tot_Ind", "tot_SP", "tot_use")] <- 0
+#' 
+#' #2) Data frame with population parameters created from "PopParam.R" 
+#' dfpop <- readRDS("inst/other/dfpop.RDS") 
+#' 
+#' #3) Create list with population parameters for different scenarios
+#' # across river lengths per geographic/political coverage class: 
+#' # basin, country, subbasin, accessible, protected area...
+#' l.gpop <- plyr::dlply(dfpop, c("akey"), PopPrep, riverl=riverl)
+#' 
+#' #4) Project scenarios across species range
+#' # takes 5 hours and writes 10 GB of results.
+#' # Do not run unless you really want to.....
+#' dflup <- plyr::ldply(l.gpop, PopProj, write_csv = TRUE, 
+#' write_db = FALSE)
+#' 
+#' #5) Get results from 3 scenarios
+#' lscen <- PopScen(dflup)
+#' dfsum <- resTabDemog(ldemog = lscen, make_html = FALSE)
 #' }
-resTabDemog <- function(demogC = NA, make_html = FALSE){
+resTabDemog <- function(ldemog = NA, make_html = FALSE){
   
-  dfpop.res <- demogC
-  # Business as usual 
-  # final year totals
-  # Accessible populations with nest collection (first year survival 0.1) and
-  # adult harvest (10%).
-  selBA <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                   dfpop.res$accessible == "Yes" &
-                   dfpop.res$variable == "tot_km" &
-                   dfpop.res$type =="headstart, female-hunt 10%" &
-                   dfpop.res$increase == "0.1" & 
-                   dfpop.res$propKM == 1) # 9 rows (total for each country)
-  # Inaccessible at base rates.
-  selBNA <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                    dfpop.res$accessible == "No" &
-                    dfpop.res$variable == "tot_km" &
-                    dfpop.res$type =="headstart" &
-                    dfpop.res$increase == "0.2" &
-                    dfpop.res$propKM == 1) # 53 rows (total for each subbasin)
-  
-  dft.BAU <-merge(dfpop.res[selBA, ], dfpop.res[selBNA, ], 
-                  by = c("name"))
-  # summarise totals
-    dfBAU <-  plyr::ddply(dft.BAU, c("name"), summarize,
-                  BAU_km_tot = max(na.omit(distKM.x)) + max(na.omit(distKM.y)), 
-                  BAU_km_accessible = max(na.omit(distKM.x)),
-                  BAU_km_inaccessible = max(na.omit(distKM.y)),
-                  BAU_lambda_accessible = max(na.omit(lambda.x)), 
-                  BAU_lambda_inaccessible = max(na.omit(lambda.y)),
-                  BAU_female_current = (max(na.omit(distKM.x)) + max(na.omit(distKM.y))) * 10,
-                  BAU_female = round(max(na.omit(adult_females.x)) + 
-                                      max(na.omit(adult_females.y)), 3),
-                  BAU_female_diff = (round(max(na.omit(adult_females.x)) + 
-                                             max(na.omit(adult_females.y)), 3) - 
-                                       ((max(na.omit(distKM.x)) + max(na.omit(distKM.y))) * 10)), 
-                  BAU_female_change = ((round(max(na.omit(adult_females.x)) + max(na.omit(adult_females.y)), 3) - 
-                                          ((max(na.omit(distKM.x)) + max(na.omit(distKM.y))) * 10)) / 
-                                         ((max(na.omit(distKM.x)) + max(na.omit(distKM.y))) * 10)) * 100
-                  
+  x <- ldemog
+  # Tab 1 summarise totals by country
+  dfBAU <-  ddply(x$dft.BAU, .(country), summarize,
+                  BAU_km_tot = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)), 
+                  BAU_km_accessible = sum(na.omit(dist_km.x)),
+                  BAU_km_inaccessible = sum(na.omit(dist_km.y)),
+                  BAU_female_current = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y))) * 10,
+                  BAU_female = round((sum(na.omit(adult_females.x)) + sum(na.omit(adult_females.y))), 3)
   ) 
+  
+  dfBAU$BAU_female_diff <- round((dfBAU$BAU_female - dfBAU$BAU_female_current),0)
+  dfBAU$BAU_female_change <- (dfBAU$BAU_female_diff / dfBAU$BAU_female_current) * 100
+  dfBAU$BAU_iucn_a3 <- cut(round(dfBAU$BAU_female_change, 0), 
+                           breaks = c(-Inf, -80, -50, -30, Inf),
+                           labels = c("CR", "EN", "VU", "not threatened"), 
+                           right = TRUE)
   
   # Strict protection, 
-  #Accessible with PAs set to base
-  selSPA.pa <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                       dfpop.res$accessible == "Yes" &
-                       dfpop.res$variable == "tot_PA" &
-                       dfpop.res$type =="headstart" &
-                       dfpop.res$increase == "0.2"&
-                       dfpop.res$propKM == 1) 
-  #Accessible not PAs set to nest collection (first year survival 0.1) and
-  # adult harvest (10%).
-  selSPA.npa <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                        dfpop.res$accessible == "Yes" &
-                        dfpop.res$variable == "tot_notPA" &
-                        dfpop.res$type =="headstart, female-hunt 10%" &
-                        dfpop.res$increase == "0.1" &
-                        dfpop.res$propKM == 1) 
-  # Inaccessible at base rates.
-  selSPNA <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                     dfpop.res$accessible == "No" &
-                     dfpop.res$variable == "tot_km" &
-                     dfpop.res$type =="headstart" &
-                     dfpop.res$increase == "0.2" &
-                     dfpop.res$propKM == 1) 
-  
-  dft.SP <- merge(dfpop.res[selSPA.pa, ], dfpop.res[selSPA.npa, ],
-                  by = c("name"))
-  dft.SP <-  merge(dft.SP, dfpop.res[selSPNA, ], 
-                   by = c("name"))
-  
-  dfSP <-  plyr::ddply(dft.SP, c("name"), summarize,
-                       SP_km_tot = max(na.omit(distKM.x)) + max(na.omit(distKM.y)) + 
-                         max(na.omit(distKM)), 
-                       SP_km_accessible = max(na.omit(distKM.x)) + max(na.omit(distKM.y)),
-                       SP_km_inaccessible = max(na.omit(distKM)),
-                       SP_lambda_accessible = max(na.omit(lambda.y)), 
-                       SP_lambda_inaccessible = max(na.omit(lambda)),
-                       SP_female_current = (max(na.omit(distKM.x)) + max(na.omit(distKM.y)) + 
-                                              max(na.omit(distKM))) * 10,
-                       SP_female = round(max(na.omit(adult_females.x)) + 
-                                           max(na.omit(adult_females.y)) + 
-                                           max(na.omit(adult_females)), 3)
-                       ) 
-  
-  dfSP$SP_female_diff <- dfSP$SP_female - dfSP$SP_female_current
-  dfSP$SP_female_change <- ((dfSP$SP_female - dfSP$SP_female_current) / dfSP$SP_female_current) * 100
+  dfSP <-  ddply(x$dft.SP, .(country), summarize,
+                 SP_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
+                                sum(na.omit(dist_km))), 
+                 SP_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
+                 SP_km_inaccessible = sum(na.omit(dist_km)),
+                 SP_female_current = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
+                                        sum(na.omit(dist_km))) * 10,
+                 SP_female = round((sum(na.omit(adult_females.x)) + sum(na.omit(adult_females.y)) + 
+                                      sum(na.omit(adult_females))), 3)
+  ) 
+  dfSP$SP_female_diff <- round((dfSP$SP_female - dfSP$SP_female_current),0)
+  dfSP$SP_female_change <- (dfSP$SP_female_diff / dfSP$SP_female_current) * 100
+  dfSP$SP_iucn_a3 <- cut(round(dfSP$SP_female_change, 0), 
+                         breaks = c(-Inf, -80, -50, -30, Inf),
+                         labels = c("CR", "EN", "VU", "not threatened"), 
+                         right = TRUE)
   
   # Community management
-  #Accessible with PAs set set to nest collection (first year survival 0.1) and
-  # adult harvest (10%).
-  selCMA.pa <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                       dfpop.res$accessible == "Yes" &
-                       dfpop.res$variable == "tot_PA" &
-                       dfpop.res$type =="headstart, female-hunt 10%" &
-                       dfpop.res$increase == "0.1" &
-                       dfpop.res$propKM == 1) 
-  
-  #Accessible not PAs to headstart 0.5 and harvest 10%
-  selCMA.npa <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                        dfpop.res$accessible == "Yes" &
-                        dfpop.res$variable == "tot_notPA" &
-                        dfpop.res$type =="headstart, female-hunt 10%" &
-                        dfpop.res$increase == "0.5" &
-                        dfpop.res$propKM == 1) 
-  # Inaccessible at base rates.
-  selCMNA <- which(dfpop.res$Years == max(dfpop.res$Years) & 
-                     dfpop.res$accessible == "No" &
-                     dfpop.res$variable == "tot_km" &
-                     dfpop.res$type =="headstart" &
-                     dfpop.res$increase == "0.2"&
-                     dfpop.res$propKM == 1) 
-  
-  dft.CM <- merge(dfpop.res[selCMA.pa, ], dfpop.res[selCMA.npa, ],
-                  by = c("name"))
-  dft.CM <-  merge(dft.CM, dfpop.res[selCMNA, ], 
-                   by = c("name"))
-  
-  dfCM <-  plyr::ddply(dft.CM, c("name"), summarize,
-                       CM_km_tot = max(na.omit(distKM.x)) + max(na.omit(distKM.y)) + 
-                         max(na.omit(distKM)), 
-                       CM_km_accessible = max(na.omit(distKM.x)) + max(na.omit(distKM.y)),
-                       CM_km_inaccessible = max(na.omit(distKM)),
-                       CM_lambda_accessible = max(na.omit(lambda.y)), 
-                       CM_lambda_inaccessible = max(na.omit(lambda)),
-                       CM_female_current = (max(na.omit(distKM.x)) + max(na.omit(distKM.y)) + 
-                                              max(na.omit(distKM))) * 10,
-                       CM_female = round(max(na.omit(adult_females.x)) + 
-                                           max(na.omit(adult_females.y)) + 
-                                           max(na.omit(adult_females)), 3)
+  dfCM <-  ddply(x$dft.CM, .(country), summarize,
+                 CM_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
+                                sum(na.omit(dist_km))),
+                 CM_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
+                 CM_km_inaccessible = sum(na.omit(dist_km)),
+                 CM_female_current = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
+                                        sum(na.omit(dist_km))) * 10,
+                 CM_female = round((sum(na.omit(adult_females.x)) + sum(na.omit(adult_females.y)) + 
+                                      sum(na.omit(adult_females))), 3)
   ) 
-  dfCM$CM_female_diff <- dfCM$CM_female - dfCM$CM_female_current
-  dfCM$CM_female_change <- ((dfCM$CM_female - dfCM$CM_female_current) / dfCM$CM_female_current) * 100
+  dfCM$CM_female_diff <- round((dfCM$CM_female - dfCM$CM_female_current),0)
+  dfCM$CM_female_change <- (dfCM$CM_female_diff / dfCM$CM_female_current) * 100
+  dfCM$CM_iucn_a3 <- cut(round(dfCM$CM_female_change, 0), 
+                         breaks = c(-Inf, -80, -50, -30, Inf),
+                         labels = c("CR", "EN", "VU", "not threatened"), 
+                         right = TRUE)
   
-  dfsum <- merge(dfBAU, dfSP, by = c("name"))
-  dfsum <- merge(dfsum, dfCM, by = c("name"))  
-  dfsum$BAU_flag_50 <- ifelse(dfsum$BAU_female_change < -49.999, 1,0)
-  dfsum$BAU_flag_30 <- ifelse(dfsum$BAU_female_change < -29.999, 1,0)
-  dfsum$SP_flag_50 <- ifelse(dfsum$SP_female_change < -49.999, 1,0)
-  dfsum$SP_flag_30 <- ifelse(dfsum$SP_female_change < -29.999, 1,0)
-  dfsum$CM_flag_50 <- ifelse(dfsum$CM_female_change < -49.999, 1,0)
-  dfsum$CM_flag_30 <- ifelse(dfsum$CM_female_change < -29.999, 1,0) 
+  dfsum <- merge(dfBAU, dfSP, by = c("country"))
+  dfsum.c <- merge(dfsum, dfCM, by = c("country"))  
   
-    if(make_html!=FALSE){
-      tab1demog <- data.frame(country = dfsum$name, 
-                              BAU = paste(round(dfsum$BAU_female/1000000,2) , 
-                                          round(dfsum$BAU_female_change,1), sep=" / "),
-                              SP = paste(round(dfsum$SP_female/1000000,2) , 
-                                         round(dfsum$SP_female_change,1), sep=" / "), 
-                              CBM = paste(round(dfsum$CM_female/1000000,2) , 
-                                          round(dfsum$CM_female_change,1), sep=" / ") 
-      )
-    t1out <- htmlTable::htmlTable(tab1demog)
+  dfsum.c$BAU_flag_50 <- ifelse(dfsum.c$BAU_female_change < -49.999, 1,0)
+  dfsum.c$BAU_flag_30 <- ifelse(dfsum.c$BAU_female_change < -29.999, 1,0)
+  dfsum.c$SP_flag_50 <- ifelse(dfsum.c$SP_female_change < -49.999, 1,0)
+  dfsum.c$SP_flag_30 <- ifelse(dfsum.c$SP_female_change < -29.999, 1,0)
+  dfsum.c$CM_flag_50 <- ifelse(dfsum.c$CM_female_change < -49.999, 1,0)
+  dfsum.c$CM_flag_30 <- ifelse(dfsum.c$CM_female_change < -29.999, 1,0)
+  
+  if(make_html!=FALSE){
+  library(htmlTable)
+  outc <- c('country', 'BAU_female', 
+            'BAU_female_change', 'SP_female', 'SP_female_change', 
+            'CM_female', 'CM_female_change', 'BAU_iucn_a3','SP_iucn_a3','CM_iucn_a3')
+  rv <- c(0,1,0,1,0,1)
+  t1out <- htmlTable(txtRound(dfsum.c[, outc],  
+                     digits = rv, excl.cols = c(1,8,9,10)), 
+            rnames=FALSE)
     sink("inst/ms_res/tab1demog.html")
     print(t1out, type="html", useViewer = FALSE)
     sink()
     }
   
-  return(dfsum)
+  return(dfsum.c)
   
 }

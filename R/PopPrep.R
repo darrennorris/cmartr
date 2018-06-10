@@ -1,5 +1,5 @@
-# function to prepare data for projection
-prepPop <- function(x){
+PopPrep <- function(x = NA, riverl = NA){
+  # function to prepare data for projection
   vpop <- unlist(x[ ,4:19])
   tracaja <- matrix(vpop, byrow = TRUE, ncol=4)
   dimnames(tracaja) <- list(c("a", "b", "c", "d"),

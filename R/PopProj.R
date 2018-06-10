@@ -1,4 +1,4 @@
-projPop <- function(x, write_csv = FALSE, write_db = FALSE){
+PopProj <- function(x, write_csv = FALSE, write_db = FALSE){
 library(popdemo)
   library(popbio)
   tracaja <- x$tracajam
