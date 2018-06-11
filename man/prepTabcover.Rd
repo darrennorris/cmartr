@@ -58,7 +58,7 @@ rin <- system.file("shape/sa_strwgs84.shp", package="cmartr")
 # Brick with acessibility raster
 ras1 <- system.file("raster/uas.grd", package="cmartr")
 
-# run
+# run, 4 - 5 hours depending on computer and memory allocation
 lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
   pBasinC = BC, riv = rin, rastAc = ras1, make_shape = FALSE)
 }

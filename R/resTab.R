@@ -66,7 +66,7 @@ resTab <- function(listsf = NA, input_rp = NA, make_html = FALSE){
   basinc <- merge(bt, basinc)
   
   # now acessibility
-  myfiles <- file.info(list.files(input_rp, pattern = ".shp", full=TRUE))
+  myfiles <- file.info(list.files(input_rp, pattern = ".shp", full.names =TRUE))
   
   # 215866
   sf.rivp <- rbind(read_sf(rownames(myfiles)[1]), 

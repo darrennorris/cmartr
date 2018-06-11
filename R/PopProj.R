@@ -1,6 +1,51 @@
+#' Title
+#'
+#' @title Project populations.
+#' 
+#' @param x List with population parameters for different scenarios.
+#' Creates using "PopPrep.R"
+#' @param write_csv Logical (TRUE/FALSE). Should csv tables be written.
+#' @param write_db Logical (TRUE/FALSE). Should postgre tables be written.
+#' 
+#' @description Projects populations through different scenarios across 
+#' species range.
+#'
+#' @return Results as .csv and/or postgresql tables. A lookup table is returned for users that 
+#' is then used for producing reaults.
+#' @importFrom utils write.csv
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' #1) River length coverage
+#' lsf <- prepTabcover(pBasin = B, pBasinSp = Bsp, 
+#' pBasinC = BC, riv = rin, rastAc = ras1, make_shape = FALSE)
+#' rp <- system.file("shape/shapes_rivers3395", package="cmartr")
+#' lt <- resTab(listsf = lsf, input_rp = rp, make_html = FALSE)
+#' atest <- lt$rlcb
+#' # add key and make sure all levels are represented
+#' atest$namekey <- paste(atest$BASIN_N, atest$name, atest$subbasn, sep = "_")
+#' riverl <- expand.grid(namekey = unique(atest$namekey), 
+#'                      accessible = unique(atest$accessible) )
+#' riverl <- merge(riverl, atest, all.x=TRUE)
+#' selNA <- which(is.na(riverl$tot_km))
+#' riverl[selNA, c("tot_km", "tot_notPA", "tot_PA", "tot_Ind", "tot_SP", "tot_use")] <- 0
+#' 
+#' #2) Data frame with population parameters created from "PopParam.R" 
+#' dfpop <- readRDS("inst/other/dfpop.RDS") 
+#' 
+#' #3) Create list with population parameters for different scenarios
+#' # across river lengths per geographic/political coverage class: 
+#' # basin, country, subbasin, accessible, protected area...
+#' l.gpop <- plyr::dlply(dfpop, c("akey"), PopPrep, riverl=riverl)
+#' 
+#' #4) Project scenarios across species range
+#' # takes 5 hours and writes 10 GB of results.
+#' # Do not run unless you really want to.....
+#' dflup <- plyr::ldply(l.gpop, PopProj, write_csv = TRUE, 
+#' write_db = FALSE)
+#' }
 PopProj <- function(x, write_csv = FALSE, write_db = FALSE){
-library(popdemo)
-  library(popbio)
   tracaja <- x$tracajam
   
   doproj <- function(x) {
@@ -53,29 +98,28 @@ library(popdemo)
   }
   
   if(write_db != FALSE){
-    library(RPostgreSQL)
-    drv <- dbDriver('PostgreSQL')  
+    drv <- RPostgreSQL::dbDriver('PostgreSQL')  
     db <- 'postgres'  
     host_db <- 'localhost'  
     db_port <- '5432'  
     db_user <- 'postgres'  
     db_password <- 'bob1975'
     
-    conn <- dbConnect(drv, dbname=db, host=host_db, 
+    conn <- RPostgreSQL::dbConnect(drv, dbname=db, host=host_db, 
                       port=db_port, user=db_user, 
                       password=db_password)
 
-    if(dbExistsTable(conn, c("turtles", "test"))){
-      dbWriteTable(conn, c("turtles", "test"), dout, 
+    if(RPostgreSQL::dbExistsTable(conn, c("turtles", "test"))){
+      RPostgreSQL::dbWriteTable(conn, c("turtles", "test"), dout, 
                    row.names = FALSE, 
                    append = T)
     }else{
-      dbWriteTable(conn, c("turtles", "test"), dout, 
+      RPostgreSQL::dbWriteTable(conn, c("turtles", "test"), dout, 
                    row.names = FALSE)
       sql_command <- "ALTER TABLE turtles.test SET UNLOGGED;"
-      dbGetQuery(conn, sql_command)
+      RPostgreSQL::dbGetQuery(conn, sql_command)
     }
-    dbDisconnect(conn) 
+    RPostgreSQL::dbDisconnect(conn) 
   }
   rm("dout")
   dflup <- data.frame(species = dfin[1,'species'], hunt = dfin[1,'hunt'], 

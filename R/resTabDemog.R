@@ -8,6 +8,7 @@
 #' Generates dataframe with summaries of population projections.
 #'
 #' @return Data.frame with summaries of population projections for three scenarios.
+#' @importFrom utils write.csv
 #' @export
 #'
 #' @examples
@@ -51,7 +52,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
   x <- ldemog
   
   # Tab 1 summarise totals by basin
-  dfBAU.b <-  ddply(lscen$dft.BAU, .(basin), summarize,
+  dfBAU.b <-  plyr::ddply(x$dft.BAU, c("basin"), summarize,
                     BAU_km_tot = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)), 
                     BAU_km_accessible = sum(na.omit(dist_km.x)),
                     BAU_km_inaccessible = sum(na.omit(dist_km.y)),
@@ -67,7 +68,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
                              right = TRUE)
   
   # Strict protection, 
-  dfSP.b <-  ddply(lscen$dft.SP, .(basin), summarize,
+  dfSP.b <-  plyr::ddply(x$dft.SP, c("basin"), summarize,
                    SP_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
                                   sum(na.omit(dist_km))), 
                    SP_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
@@ -85,7 +86,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
                            right = TRUE)
   
   # Community management
-  dfCM.b <-  ddply(lscen$dft.CM, .(basin), summarize,
+  dfCM.b <-  plyr::ddply(x$dft.CM, c("basin"), summarize,
                    CM_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
                                   sum(na.omit(dist_km))),
                    CM_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
@@ -113,7 +114,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
   dfsum.b$CM_flag_30 <- ifelse(dfsum.b$CM_female_change < -29.999, 1,0)
   
   # Tab 1 summarise totals by country
-  dfBAU <-  ddply(x$dft.BAU, .(country), summarize,
+  dfBAU <-  plyr::ddply(x$dft.BAU, c("country"), summarize,
                   BAU_km_tot = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)), 
                   BAU_km_accessible = sum(na.omit(dist_km.x)),
                   BAU_km_inaccessible = sum(na.omit(dist_km.y)),
@@ -129,7 +130,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
                            right = TRUE)
   
   # Strict protection, 
-  dfSP <-  ddply(x$dft.SP, .(country), summarize,
+  dfSP <-  plyr::ddply(x$dft.SP, c("country"), summarize,
                  SP_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
                                 sum(na.omit(dist_km))), 
                  SP_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
@@ -147,7 +148,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
                          right = TRUE)
   
   # Community management
-  dfCM <-  ddply(x$dft.CM, .(country), summarize,
+  dfCM <-  plyr::ddply(x$dft.CM, c("country"), summarize,
                  CM_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
                                 sum(na.omit(dist_km))),
                  CM_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
@@ -175,7 +176,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
   dfsum.c$CM_flag_30 <- ifelse(dfsum.c$CM_female_change < -29.999, 1,0)
   
   # Tab S2 summarise totals by basin and subbasin
-  dfBAU.bs <-  ddply(lscen$dft.BAU, .(basin, subbasin), summarize,
+  dfBAU.bs <-  plyr::ddply(x$dft.BAU, c("basin", "subbasin"), summarize,
                      BAU_km_tot = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)), 
                      BAU_km_accessible = sum(na.omit(dist_km.x)),
                      BAU_km_inaccessible = sum(na.omit(dist_km.y)),
@@ -191,7 +192,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
                               right = TRUE)
   
   # Strict protection, 
-  dfSP.bs <-  ddply(lscen$dft.SP, .(basin, subbasin), summarize,
+  dfSP.bs <-  plyr::ddply(x$dft.SP, c("basin", "subbasin"), summarize,
                     SP_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
                                    sum(na.omit(dist_km))), 
                     SP_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
@@ -209,7 +210,7 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
                             right = TRUE)
   
   # Community management
-  dfCM.bc <-  ddply(lscen$dft.CM, .(basin, subbasin), summarize,
+  dfCM.bc <-  plyr::ddply(x$dft.CM, c("basin", "subbasin"), summarize,
                     CM_km_tot = (sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)) + 
                                    sum(na.omit(dist_km))),
                     CM_km_accessible = sum(na.omit(dist_km.x)) + sum(na.omit(dist_km.y)),
@@ -244,14 +245,12 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
   dfsum.bc$subbasinT <- c(amsub, dfsum.bc$subbasin[28:52])
   
   if(make_html!=FALSE){
-  library(htmlTable)
     outb <- c('basin', 'BAU_female_current', 'BAU_female',
               'BAU_female_change', 'SP_female', 'SP_female_change', 
               'CM_female', 'CM_female_change', 'BAU_iucn_a3','SP_iucn_a3','CM_iucn_a3')
     rv <- c(0,0,1,0,1,0,1)
-    tbout <-htmlTable(txtRound(dfsum.b[, outb],  
-                       digits = rv, excl.cols = c(1,9,10,11)), 
-              rnames=FALSE)
+    tbout <- htmlTable::htmlTable(htmlTable::txtRound(dfsum.b[, outb],  
+                       digits = rv, excl.cols = c(1,9,10,11)), rnames=FALSE)
     sink("inst/ms_res/tabbasindemog.html")
     print(tbout, type="html", useViewer = FALSE)
     sink()
@@ -260,9 +259,8 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
             'BAU_female_change', 'SP_female', 'SP_female_change', 
             'CM_female', 'CM_female_change', 'BAU_iucn_a3','SP_iucn_a3','CM_iucn_a3')
   rv <- c(0,0,1,0,1,0,1)
-  t1out <- htmlTable(txtRound(dfsum.c[, outc],  
-                     digits = rv, excl.cols = c(1,9,10,11)), 
-            rnames=FALSE)
+  t1out <- htmlTable::htmlTable(htmlTable::txtRound(dfsum.c[, outc],  
+                     digits = rv, excl.cols = c(1,9,10,11)), rnames=FALSE)
     sink("inst/ms_res/tab1demog.html")
     print(t1out, type="html", useViewer = FALSE)
     sink() 
@@ -273,9 +271,8 @@ resTabDemog <- function(ldemog = NA, make_html = FALSE){
     rv <- c(0,0,1,0,1,0,1)
     dt <- dfsum.bc[, outbs]
     dt2 <- dt[order(dt$basin, dt$subbasinT), ]
-    tbcout <- htmlTable(txtRound(dt2,  
-                                digits = rv, excl.cols = c(1,2,3,11,12,13)), 
-                       rnames=FALSE)
+    tbcout <- htmlTable::htmlTable(htmlTable::txtRound(dt2,  
+                                digits = rv, excl.cols = c(1,2,3,11,12,13)), rnames=FALSE)
     sink("inst/ms_res/tabS2demog.html")
     print(tbcout, type="html", useViewer = FALSE)
     sink()
