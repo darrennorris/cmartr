@@ -1,7 +1,7 @@
-#' @title Create Figure 1
+#' @title Create Figure 2
 #'
-#' @description Generates Figgure 1. Returns list with ggplot2 figures. 
-#' Optionally exports Figure 1 as png.
+#' @description Generates Figure 2. Returns list with ggplot2 figures. 
+#' Optionally exports as png.
 #' 
 #' @param listsf List of five sf objects created by prepTabcover.R
 #' @param listTab List of data.frames created by resTab.R
@@ -45,11 +45,11 @@
 #'   pBasinC = BC, riv = rin, make_shape = FALSE)
 #
 #' lt <- resTab(listsf = lsf)
-#' lfig1 <- resFig1(listsf = lsf, listTab = lt, pBasin = B, 
+#' lfig2 <- resFig2(listsf = lsf, listTab = lt, pBasin = B, 
 #'   pBasinSp = Bsp, pBasinAcc = BAc, rastAc = ras1, make_png = FALSE)
 #' 
 #' }
-resFig1 <- function(listsf = NA, listTab = NA, pBasin = NA, 
+resFig2 <- function(listsf = NA, listTab = NA, pBasin = NA, 
                     pBasinSp = NA, pBasinAcc = NA, rastAc = NA, make_png = FALSE){
 
 # load data
@@ -231,7 +231,7 @@ if(make_png!=FALSE){
                c(3,4),
                c(5,6),
                c(7,8))
-  png("inst/ms_res/f1.png", width = 7, height = 10, 
+  png("inst/ms_res/Fig2.png", width = 7, height = 10, 
       units = 'in', res = 600, type="cairo-png")
   gridExtra::grid.arrange(f1a, f1b, f1c, f1d, f1e, f1f, f1g, f1h, layout_matrix = lay)
   dev.off()
