@@ -95,7 +95,7 @@ selKM1 <- which(df5hs$variable %in% c("All"))
 dff3 <- df5hs[selKM1, ]
 
 pdf("Fig3.pdf", width= 7, height = 3.5, useDingbats = FALSE)
-ggplot2:ggplot(dff3, aes(propKM, prop_change_clean, color = increase)) +
+ggplot2::ggplot(dff3, aes(propKM, prop_change_clean, color = increase)) +
   geom_hline(yintercept = 0) +
   geom_jitter(width = 0.1, height = 0.1, alpha=0.1) +
   stat_smooth(se=FALSE) +
