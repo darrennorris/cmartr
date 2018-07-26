@@ -1,2 +1,2 @@
 # cmartr
-R functions for the Community Mangement of Amazon River Turtles
+R functions for the Community Mangement of Amazonian River Turtles
