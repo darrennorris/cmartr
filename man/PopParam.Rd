@@ -19,6 +19,11 @@ Creates data.frame with parameters used in "PopProj.R".
 Creates data.frame with parameters for use in subsequent
 population projection function ("PopProj.R")
 }
+\details{
+This function holds the demographic parameters used 
+in population projections. When called by a user, it will create 
+a data.frame with these demogrpahic parameters.
+}
 \examples{
 \dontrun{
 dfpop <- PopParam(species = "Podocnemis unifilis", make_rds = FALSE)

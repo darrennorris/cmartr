@@ -5,14 +5,14 @@ Version: 0.1.0
 Author: Darren Norris [cre, aut]
 Maintainer: Darren Norris <yourself@somewhere.net>
 Description: Provides functions for demographic analysis of 
-river turtle management options. Functions are organized in three groups, 
-by name: "prep.." , "Pop..." and "res..." .
+    river turtle management options. Functions are organized in three groups, 
+    by name: "prep.." , "Pop..." and "res..." .
     "prep.." are functions used to generate spatial layers 
-(poygons and raster files), with countries, catchments, rivers,
-protected areas and human accessibility.
+    (poygons and raster files), with countries, catchments, rivers,
+    protected areas and human accessibility.
     "Pop..." are functions used for modelling population demographics.
     "res..." are functions used to generate results, 
-producing tables and figures.
+    producing tables and figures.
 Imports: dplyr,
     ggplot2,
     gridExtra,
