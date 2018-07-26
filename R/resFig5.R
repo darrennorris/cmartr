@@ -6,6 +6,11 @@
 #' @param pBasin Input file with basin polygons.
 #'
 #' @return Exports Figure 5 as .png file.
+#' 
+#' @import ggplot2
+#' @importFrom grDevices dev.off png pdf
+#' @importFrom gridExtra grid.arrange
+#'
 #' @export
 #'
 #' @examples

@@ -2,38 +2,23 @@
 % Please edit documentation in R/resFig4.R
 \name{resFig4}
 \alias{resFig4}
-\title{Create Figure 4}
+\title{Create and export Figure 4.}
 \usage{
-resFig4(listsf = NA, dfsumC = NA, dfsumB = NA, make_png = FALSE)
+resFig4(x)
 }
 \arguments{
-\item{listsf}{List of five sf objects created by prepTabcover.R}
-
-\item{dfsumC}{Dataframe with country population summary from resTabDemog.R}
-
-\item{dfsumB}{Dataframe with basin population summary.}
-
-\item{make_png}{Logical (TRUE/FALSE). Generate png version of Fig 4.}
+\item{x}{Data.frame created by "proj.rivl.R".}
 }
 \value{
-ggplot2 figures and optionally writes png file.
+Exports Figure 4 as .png file.
 }
 \description{
-Generates Figure 4 country figures. Returns list with ggplot2 figures. 
-Optionally exports Figure 4 as png.
-}
-\details{
-Title
+Generates Figure 4. Needs updating to take results from 
+"PopProj.R" and "PopScen.R"
 }
 \examples{
 \dontrun{
-lsf <-  prepTabcover(pBasin = B, pBasinSp = Bsp, 
-pBasinC = BC, riv = rin, make_shape = FALSE)
-popc <- "~/ms/unpublished/2018 Unifilis demography/analises/dfpop.RDS"
-demogC <- cmartr::demogCountry(popc = popc, rlc = lt$rlc)
-save(demogC, file = "inst/ms_res/dfdemogC.RData")
-dfsum <- cmartr::resTabDemog(demogC = demogC, make_html = FALSE)
-save(dfsum, file = "inst/ms_res/dfsumC.RData")
-fig4C <- resFig4(listsf = lsf, dfsumC = dfsum, dfsumB = NA)
+dfpop.res <- readRDS("C:\\\\Users\\\\Darren\\\\Documents\\\\ms\\\\unpublished\\\\2018 Unifilis demography\\\\analises\\\\dfpopres.RDS")
+resFig4(dfres)
 }
 }

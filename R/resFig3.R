@@ -6,6 +6,9 @@
 #' @param x Data.frame created by "proj.rivl.R".
 #'
 #' @return Exports Figure 3 as .pdf file.
+#' @import ggplot2
+#' @importFrom grDevices dev.off png pdf
+#' @importFrom gridExtra grid.arrange
 #' @export
 #'
 #' @examples

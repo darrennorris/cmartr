@@ -15,7 +15,7 @@
 #'
 #' @return List of plots created by ggplot2. Optionally exports as png.
 #' @import ggplot2
-#' @importFrom grDevices dev.off png
+#' @importFrom grDevices dev.off png pdf
 #' @importFrom gridExtra grid.arrange
 #' @importFrom stats na.omit
 #' @importFrom viridis scale_fill_viridis
