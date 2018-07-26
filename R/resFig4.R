@@ -1,28 +1,39 @@
-
-## Now how long ?
-memory.limit(16000)
-file.choose()
-dfpop.res <- readRDS("C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\dfpopres.RDS")
-table(dfpop.res$lambda) # 0.465 to  1.1635
-names(dfpop.res)
+#' @title Create and export Figure 4.
+#' 
+#' @description Generates Figure 4. Needs updating to take results from 
+#' "PopProj.R" and "PopScen.R"
+#'
+#' @param x Data.frame created by "proj.rivl.R".
+#'
+#' @return Exports Figure 4 as .png file.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' dfpop.res <- readRDS("C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\dfpopres.RDS")
+#' resFig4(dfres)
+#' }
+resFig4 <- function(x){
+  ## Now how long ?
 sel50All <- which(dfpop.res$change50_flag==1 & 
                     dfpop.res$accessible=="Yes",
                   dfpop.res$variable=="tot_km")
 mycoln <- c("type" , "increase" , "BASIN_N" ,"subbasn", 
             "accessible", "propKM",  "distKM", "lambda" )           
-library(plyr)
+
 dfpop.resY <- plyr::ddply(dfpop.res[sel50All, ], (mycoln), 
                           summarise, 
                           Years_50 = min(Years))
 dfpop.resY$Years_50c <- ifelse(as.numeric(dfpop.resY$lambda) < 1, 
                                dfpop.resY$Years_50 * -1, 
                                dfpop.resY$Years_50)
-levels(dfpop.resY$type)
+
 levels(dfpop.resY$type) <- c("No hunt", "Hunt 2.5%", "Hunt 10%",
                              "Hunt 25%", "Hunt 50%")
 selP1 <- which(dfpop.resY$propKM==1)
-library(ggplot2)
-f4 <- ggplot(dfpop.resY[selP1, ], aes(x = increase, y = Years_50c, color=lambda)) +
+
+f4 <- ggplot2::ggplot(dfpop.resY[selP1, ], aes(x = increase, y = Years_50c, 
+                                               color=lambda)) +
   geom_jitter(alpha=0.3) +
   scale_color_gradientn("lambda", 
                         colours = c("darkred","tomato1", 
@@ -37,3 +48,4 @@ png("inst/ms_res/Fig4.png", width = 7, height = 3.5,
     units = 'in', res = 600, type="cairo-png")
 f4
 dev.off()
+}

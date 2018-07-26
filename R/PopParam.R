@@ -1,5 +1,23 @@
-PopParam <- function(){
+#' @title Create data.frame with demographic parameters
+#' 
+#' @description Creates data.frame with parameters for use in subsequent
+#' population projection function ("PopProj.R") 
+#'
+#' @param species Name of species. Default is "Podocnemis unifilis"
+#' @param make_rds Logical (TRUE/FALSE). Should .RDS format be written.
+#' Default is FALSE
+#'
+#' @return Creates data.frame with parameters used in "PopProj.R".
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' dfpop <- PopParam(species = "Podocnemis unifilis", make_rds = FALSE)
+#' }
+#' 
+PopParam <- function(species = "Podocnemis unifilis", make_rds = FALSE){
   
+  sp <- species
   # parameters
   # female fecundity
   cfreq = 1.10 #clutch frequency
@@ -44,7 +62,7 @@ PopParam <- function(){
   dfpop <- 
     rbind(
       data.frame(
-        species = "Podocnemis unifilis",
+        species = sp,
         type = "headstart",   #set PPM element values,
         increase = as.character(ehsur1),
         a1 = 0,   #leave = 0
@@ -65,7 +83,7 @@ PopParam <- function(){
         d4 = asur  #default = 0.93
       ),
       data.frame(
-        species = "Podocnemis unifilis",
+        species = sp,
         type = "headstart, female-hunt 2.5%",   #set PPM element values
         increase = as.character(ehsur1),
         a1 = 0,   #leave = 0
@@ -86,7 +104,7 @@ PopParam <- function(){
         d4 = (asur * 0.975) #default = 0.93
       ),
       data.frame(
-        species = "Podocnemis unifilis",
+        species = sp,
         type = "headstart, female-hunt 10%",   #set PPM element values
         increase = as.character(ehsur1),
         a1 = 0,   #leave = 0
@@ -107,7 +125,7 @@ PopParam <- function(){
         d4 = (asur * 0.90) #default = 0.93
       ),
       data.frame(
-        species = "Podocnemis unifilis",
+        species = sp,
         type = "headstart, female-hunt 25%",   #set PPM element values
         increase = as.character(ehsur1),
         a1 = 0,   #leave = 0
@@ -128,7 +146,7 @@ PopParam <- function(){
         d4 = (asur * 0.75)  #default = 0.93
       ),
       data.frame(
-        species = "Podocnemis unifilis",
+        species = sp,
         type = "headstart, female-hunt 50%",   #set PPM element values
         increase = as.character(ehsur1),
         a1 = 0,   #leave = 0
@@ -155,7 +173,9 @@ PopParam <- function(){
   dfpop$type <- as.numeric(as.character(dfpop$type))
   dfpop$increase <- as.numeric(as.character(dfpop$increase))
   
+  if(make_rds!=FALSE){
   saveRDS(dfpop, "inst/other/dfpop.RDS") 
+  }
   return(dfpop)
   
 }

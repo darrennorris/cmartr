@@ -1,6 +1,21 @@
-resFig3
+#' @title Create and export Figure 3.
+#' 
+#' @description Generates Figure 3. Needs updating to take results from 
+#' "PopProj.R" and "PopScen.R"
+#' 
+#' @param x Data.frame created by "proj.rivl.R".
+#'
+#' @return Exports Figure 3 as .pdf file.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' dfres <- readRDS("C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\dfpopres.RDS")
+#' resFig3(dfres)
+#' }
+resFig3 <- function(x){
 # make tables
-dfpop.res <- readRDS("dfpopres.RDS")
+dfpop.res <- x #
 selH50 <- which(dfpop.res$Years == max(dfpop.res$Years))
 dfpop.res50 <- dfpop.res[selH50, ]
 
@@ -9,7 +24,6 @@ dataF5 <- function(x) {
   selAc <- which(x$accessible == "Yes" & x$propKM < 1)
   dft <- x[selAc, ]
   # sort by basin, subbasin, increase, propKM, variable
-  library(dplyr)
   df5as <- dplyr::arrange(dft, 
                           increase, propKM, BASIN_N, subbasn, variable)
   
@@ -59,33 +73,26 @@ dataF5 <- function(x) {
   df5as
 }
 
-library(plyr)
 df5hs <- plyr::ddply(dfpop.res50, .(species, type), .fun = dataF5)
-table(df5hs$type) # 60420
-names(df5hs)
-levels(df5hs$variable)
 levels(df5hs$variable) <- c("All", "Not protected", "Protected", 
                             "Indigenous", "Strict", "Use")
-levels(df5hs$type)
 levels(df5hs$type) <- c("No hunt", "Hunt 2.5%", "Hunt 10%",
                         "Hunt 25%", "Hunt 50%")
 
 # Fig 3 plot = How much?
-library(ggplot2)
-table(df5hs$variable)
 mycol <- c("#FF00FF", "#CC33CC", "#FF00CC", 
            "#FFFF33", "#FF9933", "#CC6600", "#993300", 
            "#00FF00", "#339900", "#336600")
-selKM <- which(df5hs$variable %in% c("All", "Not protected", "Protected"))
+
 selKM1 <- which(df5hs$variable %in% c("All"))
 # 173 mm (7inch) width, http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1755-263X/homepage/ForAuthors.html
-saveRDS(df5hs[selKM1, ], "Fig2dat.RDS")
+#saveRDS(df5hs[selKM1, ], "Fig2dat.RDS")
+#dff3 <- readRDS("C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\Fig2dat.RDS")
 
+dff3 <- df5hs[selKM1, ]
 
-dff3 <- readRDS("C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\Fig2dat.RDS")
-library(ggplot2)
 pdf("Fig3.pdf", width= 7, height = 3.5, useDingbats = FALSE)
-ggplot(dff3, aes(propKM, prop_change_clean, color = increase)) +
+ggplot2:ggplot(dff3, aes(propKM, prop_change_clean, color = increase)) +
   geom_hline(yintercept = 0) +
   geom_jitter(width = 0.1, height = 0.1, alpha=0.1) +
   stat_smooth(se=FALSE) +
@@ -96,3 +103,4 @@ ggplot(dff3, aes(propKM, prop_change_clean, color = increase)) +
   xlab("Scenario cover (Proportion of catchment river length)") + 
   scale_color_manual(name="Hatchling\nGraduation", values = mycol)
 dev.off()
+}
