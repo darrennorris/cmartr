@@ -7,6 +7,9 @@
 #' @param make_rds Logical (TRUE/FALSE). Should .RDS format be written.
 #' Default is FALSE
 #'
+#' @details This function holds the demographic parameters used 
+#' in population projections. When called by a user, it will create 
+#' a data.frame with these demogrpahic parameters.
 #' @return Creates data.frame with parameters used in "PopProj.R".
 #' @export
 #'
