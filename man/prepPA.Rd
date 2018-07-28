@@ -13,7 +13,7 @@ prepPA(PAin = NA)
 Files for subsequent use.
 }
 \description{
-Generates files for subsequent use.
+Generates files for subsequent use in "PrepPAcover.R".
 }
 \details{
 Takes georeferenced polygons of protected areas from the World Database on Protected Areas (WDPA, downloaded from https://protectedplanet.net/ on 6 December 2017).
@@ -24,5 +24,13 @@ I.e. touching, intersecting, within bounding box created from 150 km  buffer aro
 }
 \examples{
 \dontrun{
+# Load shapefiles needed
+# These large files are not available via github package. 
+# Download "shapes.zip" from :
+# https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
+# For the code below to work, 
+# extract files in "shapes.zip" to cmartr/inst/shape .
+PA <- system.file("shape/wdpaselect.shp", package="cmartr")
+sf.pa <- cmartr::prepPA(PAin = PA)
 }
 }

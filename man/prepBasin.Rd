@@ -13,7 +13,7 @@ prepBasin(Bain = NA, make_shape = FALSE)
 covering basins with species locations ("SpeciesBasin.shp").}
 }
 \value{
-Files for subsequent use.
+Files for subsequent use in "PrepPAcover.R".
 }
 \description{
 Generates files for subsequent use. 
@@ -24,5 +24,12 @@ Takes georeferenced polygons of river basins
 }
 \examples{
 \dontrun{
+# These large files are not available via github package. 
+# Download "shapes.zip" from :
+# https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
+# For the code below to work, 
+# extract files in "shapes.zip" to cmartr/inst/shape 
+B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
+sfclean <- cmartr::prepBasin(Bain = pBasin)
 }
 }

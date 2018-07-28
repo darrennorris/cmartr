@@ -7,7 +7,7 @@
 #' covering basins with species locations ("SpeciesBasin.shp").
 #' @details Takes georeferenced polygons of river basins
 #'
-#' @return Files for subsequent use.
+#' @return Files for subsequent use in "PrepPAcover.R".
 #' @import sf
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -15,6 +15,14 @@
 #'
 #' @examples
 #' \dontrun{
+# Load shapefiles needed
+#' # These large files are not available via github package. 
+#' # Download "shapes.zip" from :
+#' # https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
+#' # For the code below to work, 
+#' # extract files in "shapes.zip" to cmartr/inst/shape 
+#' B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
+#' sfclean <- cmartr::prepBasin(Bain = pBasin)
 #' }
 prepBasin <- function(Bain = NA, make_shape = FALSE){
   sf1 <- sf::read_sf(Bain)

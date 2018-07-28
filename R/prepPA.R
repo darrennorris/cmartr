@@ -1,6 +1,6 @@
 
 #' @title Prepare protected area polygons
-#' @description Generates files for subsequent use.
+#' @description Generates files for subsequent use in "PrepPAcover.R".
 #'
 #' @param PAin Input file with protected area polygons
 #'
@@ -14,6 +14,14 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Load shapefiles needed
+#' # These large files are not available via github package. 
+#' # Download "shapes.zip" from :
+#' # https://drive.google.com/open?id=1QQArA7pPLemUVQTKx7PxigsQXKpOG0YQ
+#' # For the code below to work, 
+#' # extract files in "shapes.zip" to cmartr/inst/shape .
+#' PA <- system.file("shape/wdpaselect.shp", package="cmartr")
+#' sf.pa <- cmartr::prepPA(PAin = PA)
 #' }
 prepPA <- function(PAin = NA){
 ### protected areas
