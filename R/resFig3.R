@@ -13,7 +13,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' dfres <- readRDS("C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\dfpopres.RDS")
+#' dfres <- 
+#' readRDS(
+#' "C:\\Users\\Darren\\Documents\\ms\\unpublished\\2018 Unifilis demography\\analises\\dfpopres.RDS"
+#' )
 #' resFig3(dfres)
 #' }
 resFig3 <- function(x){
