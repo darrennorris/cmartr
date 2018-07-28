@@ -29,9 +29,11 @@ Imports: dplyr,
     reshape2,
     rnaturalearth,
     rnaturalearthdata,
+    RPostgreSQL,
     sf,
     sp,
     stats,
+    tidyr,
     units,
     viridis
 License: file LICENSE
