@@ -29,7 +29,8 @@
 #'                      accessible = unique(atest$accessible) )
 #' riverl <- merge(riverl, atest, all.x=TRUE)
 #' selNA <- which(is.na(riverl$tot_km))
-#' riverl[selNA, c("tot_km", "tot_notPA", "tot_PA", "tot_Ind", "tot_SP", "tot_use")] <- 0
+#' coln <- c("tot_km", "tot_notPA", "tot_PA", "tot_Ind", "tot_SP", "tot_use")
+#' riverl[selNA, coln] <- 0
 #' 
 #' #2) Data frame with population parameters created from "PopParam.R" 
 #' dfpop <- readRDS("inst/other/dfpop.RDS") 
