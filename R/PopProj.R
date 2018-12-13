@@ -99,7 +99,7 @@ PopProj <- function(x, write_csv = FALSE, write_db = FALSE){
   }
   
   if(write_db != FALSE){
-    drv <- RPostgreSQL::dbDriver('PostgreSQL')  
+    drv <- RPostgreSQL::PostgreSQL() 
     db <- 'postgres'  
     host_db <- 'localhost'  
     db_port <- '5432'  
