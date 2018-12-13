@@ -4,7 +4,8 @@
 \alias{prepPAcover}
 \title{Prepare polygons for PAcover calculations}
 \usage{
-prepPAcover(pPA = NA, pBasin = NA, pBasinSp = NA, make_shape = FALSE)
+prepPAcover(pPA = NA, pBasin = NA, pBasinSp = NA,
+  make_shape = FALSE)
 }
 \arguments{
 \item{pPA}{Input file with protected area polygons.}
