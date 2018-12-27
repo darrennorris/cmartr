@@ -55,7 +55,7 @@ PopScenAcess <- function(x){
   # x = dflup from "projPop.R"
   # 2-3 mins, time takes to load large .csv files
   # selects relevant projection data from modelled scenarios
-  x <- dflup
+  # x <- dflup
   f.base <- which(x$hunt==0 & x$increase==0.2)
   base <- read.csv(as.character(x[f.base,'fileout']))
   f.hunt <- which(x$hunt==10 & x$increase==0.1)
