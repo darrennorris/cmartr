@@ -4,32 +4,24 @@
 \alias{resFig5}
 \title{Create and export Figure 5.}
 \usage{
-resFig5(x, pBasin = NA)
+resFig5(x)
 }
 \arguments{
-\item{x}{Data.frame with results from "resTabDemog.R".}
-
-\item{pBasin}{Input file with basin polygons.}
+\item{x}{Data.frame created by "proj.rivl.R".}
 }
 \value{
 Exports Figure 5 as .png file.
 }
 \description{
-Generates Figure 5.
+Generates Figure 5. Needs updating to take results from 
+"PopProj.R" and "PopScen.R"
 }
 \examples{
 \dontrun{
-# Get results from 3 scenarios
-load("~/ms/unpublished/2018 Unifilis demography/analises/testl.RData")
-library(magrittr)
-source("R/PopScen.R")
-lscen <- PopScen(dflup)
-library(plyr)
-source("R/resTabDemog.R")
-lsum <- resTabDemog(ldemog = lscen, make_html = FALSE)
-dfsum <- lsum$dfsum.bc
-B <- system.file("shape/amazon_orinoco.shp", package="cmartr")
-resFig5(dfsum, pBasin = B)
+dfpop.res <- 
+readRDS(
+"C:\\\\Users\\\\Darren\\\\Documents\\\\ms\\\\unpublished\\\\2018 Unifilis demography\\\\analises\\\\dfpopres.RDS"
+)
+resFig5(dfres)
 }
-
 }

@@ -7,21 +7,21 @@
 resFig3(x)
 }
 \arguments{
-\item{x}{Data.frame created by "proj.rivl.R".}
+\item{x}{Data.frame from cmartr::PopParam}
 }
 \value{
-Exports Figure 3 as .pdf file.
+pdf of Figure 3.
 }
 \description{
-Generates Figure 3. Needs updating to take results from 
-"PopProj.R" and "PopScen.R"
+Generates Figure 3.
+}
+\details{
+Title
 }
 \examples{
 \dontrun{
-dfres <- 
-readRDS(
-"C:\\\\Users\\\\Darren\\\\Documents\\\\ms\\\\unpublished\\\\2018 Unifilis demography\\\\analises\\\\dfpopres.RDS"
-)
-resFig3(dfres)
+dfpop <- cmartr::PopParam(species = "Podocnemis unifilis", 
+make_rds = FALSE)
+resFig3(dfpop)
 }
 }

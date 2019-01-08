@@ -10,7 +10,7 @@ resFig4(x)
 \item{x}{Data.frame created by "proj.rivl.R".}
 }
 \value{
-Exports Figure 4 as .png file.
+Exports Figure 4 as .pdf file.
 }
 \description{
 Generates Figure 4. Needs updating to take results from 
@@ -18,7 +18,7 @@ Generates Figure 4. Needs updating to take results from
 }
 \examples{
 \dontrun{
-dfpop.res <- 
+dfres <- 
 readRDS(
 "C:\\\\Users\\\\Darren\\\\Documents\\\\ms\\\\unpublished\\\\2018 Unifilis demography\\\\analises\\\\dfpopres.RDS"
 )

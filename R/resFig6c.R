@@ -1,8 +1,8 @@
 #' Title
-#' @title Create Figure 4
+#' @title Create Figure 6
 #' 
-#' @description Generates Figure 4 country figures. Returns list with ggplot2 figures. 
-#' Optionally exports Figure 4 as png.
+#' @description Generates Figure 6 country figures. Returns list with ggplot2 figures. 
+#' Optionally exports Figure 6 as png.
 #' 
 #' @param listsf List of five sf objects created by prepTabcover.R
 #' @param dfsumC Dataframe with country population summary from resTabDemog.R
@@ -26,7 +26,7 @@
 #' save(dfsum, file = "inst/ms_res/dfsumC.RData")
 #' fig4C <- resFig4(listsf = lsf, dfsumC = dfsum, dfsumB = NA)
 #' }
-resFig5c <- function(listsf = NA, dfsumC = NA, dfsumB = NA, make_png = FALSE){
+resFig6c <- function(listsf = NA, dfsumC = NA, dfsumB = NA, make_png = FALSE){
   
   #join with country intersected with basin
   pac <- merge(st_transform(listsf$basinc, crs = 4326), dfsumC)
@@ -161,7 +161,7 @@ resFig5c <- function(listsf = NA, dfsumC = NA, dfsumB = NA, make_png = FALSE){
     lay <- rbind(c(1,2,3),
                  c(4,5,6),
                  c(7,8,9))
-    png("inst/ms_res/f4c.png", width = 8.5, height = 6, 
+    png("inst/ms_res/f6c.png", width = 8.5, height = 6, 
         units = 'in', res = 600, type="cairo-png")
     gridExtra::grid.arrange(f4cbau, f4csp, f4ccm, 
                             f4c50BAU, f4c50SP, f4c50CM, 
