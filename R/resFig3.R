@@ -113,6 +113,8 @@ resFig3 <- function(x, make_col = FALSE){
     scale_y_continuous(limits = c(0, 50000)) +
     coord_cartesian(ylim = c(0,40000))  +
     theme_bw() +
+    theme( # remove the vertical grid lines
+      panel.grid.minor.x = element_blank()) +
     facet_wrap(~type, nrow = 1, labeller = label_wrap_gen(width=19))
  
    f2.2bw <- ggplot(dfgpop, aes(Years, adult_females, 
@@ -126,6 +128,8 @@ resFig3 <- function(x, make_col = FALSE){
      coord_cartesian(ylim = c(0,10000))  +
      ylab("Individuals (adult females)") +
      theme_bw() +
+     theme( # remove the vertical grid lines
+       panel.grid.minor.x = element_blank()) +
      facet_wrap(~type, nrow = 1, labeller = label_wrap_gen(width=19))
    #plot
    pdf(file="inst/ms_res/fig3bw.pdf",width=7, height=6, useDingbats = FALSE)
