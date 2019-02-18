@@ -4,7 +4,7 @@
 #' 
 #' @param x Data.frame created by "resFig4prep.R".
 #'
-#' @return Exports Figure 4 as .pdf file.
+#' @return Exports Figure 4 as .png and .pdf files.
 #' @import ggplot2
 #' @importFrom grDevices dev.off png pdf
 #' 
