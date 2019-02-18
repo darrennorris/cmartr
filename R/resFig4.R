@@ -7,11 +7,15 @@
 #' @return Exports Figure 4 as .pdf file.
 #' @import ggplot2
 #' @importFrom grDevices dev.off png pdf
-#' @importFrom gridExtra grid.arrange
+#' 
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' # From "resFig4prep.R".
+#' f.base <- which(dflup$hunt==0 & dflup$increase==0.2)
+#' dflupin <- dflup[-f.base, ]
+#' 
 #' # run function takes 40 minutes approx.
 #' fig4prep <- ddply(dflupin, .(hunt, increase), .fun = resFig3prep)
 #' # tidy for plotting
