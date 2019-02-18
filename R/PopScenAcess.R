@@ -85,7 +85,7 @@ PopScenAcess <- function(x){
   dft.BAU <-merge(h1, h2, 
                   by = c("namekey", "variable", "rank_prop"))
   dft.BAU$namekeys <- dft.BAU$namekey
-  library(magrittr)
+  #library(magrittr)
   dft.BAU <- dft.BAU %>% tidyr::separate(namekeys, 
                                   into = c("basin", "country", "subbasin"), sep="_")
   # limit population to 100 times original (i.e. 10*100 = 1000 adult females per km)
