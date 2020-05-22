@@ -13,12 +13,10 @@ Description: Provides functions for the demographic analysis of
     protected areas and human accessibility.
     "Pop..." are functions used for modelling population demographics.
     "res..." are functions used to generate results, 
-    producing tables and figures.
-    
-    Example showing the use of these functions is available here: 
-  Darren Norris, Carlos A. Peres, Fernanda Michalski, James P. Gibbs. 
-  Prospects   for freshwater turtle population recovery are catalyzed by pan-Amazonian community-based management. 
-  Biological Conservation, Volume 233. 2019.         https://doi.org/10.1016/j.biocon.2019.02.022.
+    producing tables and figures. Example showing the use of these functions is available here:
+    Darren Norris, Carlos A. Peres, Fernanda Michalski, James P. Gibbs.
+    Prospects for freshwater turtle population recovery are catalyzed by pan-Amazonian community-based management.
+    Biological Conservation, Volume 233. 2019.         https://doi.org/10.1016/j.biocon.2019.02.022.
 Imports: dplyr,
     ggplot2,
     gridExtra,
